@@ -1,0 +1,23 @@
+---
+Checks:          "-*,performance-*,bugprone-*,readability-identifier-naming"
+HeaderFilterRegex: '*.*'
+CheckOptions:
+  - key:             bugprone-suspicious-include.HeaderFileExtensions
+    value:           'h;'
+  - key:             bugprone-suspicious-include.ImplementationFileExtensions
+    value:           'c;'
+
+  - key:             readability-identifier-naming.VariableCase
+    value:           lower_case
+  - key:             readability-identifier-naming.TypedefCase
+    value:           CamelCase
+  - key:             readability-identifier-naming.MacroDefinitionCase
+    value:           UPPER_CASE
+  - key:             readability-identifier-naming.FunctionCase
+    value:           aNy_CasE
+  - key:             readability-identifier-naming.EnumCase
+    value:           CamelCase
+  - key:             readability-identifier-naming.ParameterCase
+    value:           lower_case
+...
+

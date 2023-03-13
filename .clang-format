@@ -1,0 +1,14 @@
+---
+BasedOnStyle: LLVM
+AlignAfterOpenBracket: Align
+AllowShortFunctionsOnASingleLine: None
+BinPackArguments: false
+BinPackParameters: false
+ColumnLimit: 80
+PointerAlignment: Left
+SpaceAfterCStyleCast: true
+IndentWidth: 4
+UseTab: Never
+AlignOperands: AlignAfterOperator
+AlignAfterOpenBracket: AlwaysBreak
+...
