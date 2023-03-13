@@ -1,6 +1,6 @@
 ---
 title: Perfectionnement à la programmation C
-subtitle: TP3 - Chronomètre
+subtitle: TP6 - Compter les mots
 date: 13 février 2023
 colorlinks: true
 author:
@@ -28,6 +28,18 @@ header-includes:
 # Réponses
 
 ## Exercice 1
+
+2.
+
+- ``-a`` : trier les mots de la réponse dans l'ordre lexicographique.
+
+- ``-n`` : trier les mots de la réponse d'après leur nombre d'occurences de manière décroissante.
+
+- ``-s MOT`` : afficher des lignes qui contiennent chacune, chaque u mot qui suit MOT dans le fichier, suivies d'espaces, suivies du nombre (en base dix d'occurences du u situées après MOT)
+
+- ``-e N`` : afficher une ligne pour chaque expression composée de N mots extraite de X suivie d’espaces, suivies du nombre (en base dix d’occurrences de l’expression en question dans le fichier.
+
+
 
 ## Exercice 2
 

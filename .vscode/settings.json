@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "istream": "c",
+        "stdio.h": "c",
+        "stdlib.h": "c",
+        "algo.h": "c",
+        "affichage.h": "c",
+        "string.h": "c",
+        "tableau.h": "c"
+    }
+}
