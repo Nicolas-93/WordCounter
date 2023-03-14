@@ -33,16 +33,25 @@ header-includes:
 
 - ``-a`` : trier les mots de la réponse dans l'ordre lexicographique.
 
-- ``-n`` : trier les mots de la réponse d'après leur nombre d'occurences de manière décroissante.
+- ``-n`` : trier les mots de la réponse d'après leur nombre d’occurrences de manière décroissante.
 
-- ``-s MOT`` : afficher des lignes qui contiennent chacune, chaque u mot qui suit MOT dans le fichier, suivies d'espaces, suivies du nombre (en base dix d'occurences du u situées après MOT)
+- ``-s MOT`` : afficher des lignes qui contiennent chacune, chaque u mot qui suit MOT dans le fichier, suivies d'espaces, suivies du nombre (en base dix d’occurrences du u situées après MOT)
 
 - ``-e N`` : afficher une ligne pour chaque expression composée de N mots extraite de X suivie d’espaces, suivies du nombre (en base dix d’occurrences de l’expression en question dans le fichier.
-
-
 
 ## Exercice 2
 
 ## Exercice 3
 
 ## Exercice 4
+
+# Remarques
+
+Nous avions commencé à utiliser un tableau dynamique pour gérer l'ensemble, cependant après considération de la complexité (Recherche : O(n)) nous sommes parti sur une structure d'arbre afin d'améliorer les performances du programme (Recherche en moyenne en complexité logarithmique).
+
+Ainsi la fonction principale du programme (compter les mots), possède une complexité $O(n \times log(n))$ :
+
+- Ajout : $log(n)$
+- Test d'appartenance : $log(n)$
+- Aplatissement de l'arbre : $O(n)$
+- Tri avec ``qsort`` : $O(n \times log(n))$

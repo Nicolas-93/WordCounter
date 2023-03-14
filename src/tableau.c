@@ -1,92 +1,91 @@
 #include "tableau.h"
-#include "mot.h"
-#include <stdlib.h>
+#include "ABR.h"
 #include <stdio.h>
-#include <stdbool.h>
+#include <stdlib.h>
 #include <string.h>
-
-#define TAILLE_BLOC 150
-
+#include <assert.h>
 
 
-TabMots* TAB_initialiser() {
-    TabMots *res = malloc(sizeof(TabMots));
-    
-    if (res == NULL)
-        return NULL;
-    
-    res->mots = malloc(TAILLE_BLOC * sizeof(MotEntry));
-    
-    if (res->mots == NULL) {
-        free(res);
-        return NULL;
-    }
+int (*cmp_funcs[2][3])(const void* a, const void* b) = {
+    {
+        TAB_compare_tri_lexico_decroissant,
+        TAB_compare_tri_occ_decroissant,
+        TAB_compare_tri_apparition_decroissant,
+    },
+    {
+        TAB_compare_tri_lexico_croissant,
+        TAB_compare_tri_occ_croissant,
+        TAB_compare_tri_apparition_croissant,
+    },
+};
 
-    res->max_size = TAILLE_BLOC;
-    res->len = 0;
-    res->max_str_len = 0;
-    
-    return res;
+void TAB_arbre_en_tab_aux(MotEntry** tab, MotEntry* arbre, int* i) {
+    if (IS_EMPTY_TREE(arbre))
+        return;
+
+    TAB_arbre_en_tab_aux(tab, arbre->fg, i);
+    tab[(*i)++] = arbre;
+    TAB_arbre_en_tab_aux(tab, arbre->fd, i);
 }
 
-int TAB_cherche_mot(const TabMots* ensemble, char* mot) {
-    for (int i = 0; i < ensemble->len; i++)
-        if (strcmp(ensemble->mots[i].mot, mot) == 0)
-            return i;
-    return -1;
+TabMots TAB_arbre_en_tab(const Mots* ens) {
+    TabMots tab;
+    tab.len = ens->len;
+    tab.tab = malloc(tab.len * sizeof(MotEntry*));
+    tab.max_str_len = ens->max_str_len;
+    
+    int i = 0;
+    TAB_arbre_en_tab_aux(tab.tab, ens->racine, &i);
+
+    return tab;
 }
 
-bool TAB_appartient(const TabMots *ensemble, char* mot) {
-    return TAB_cherche_mot(ensemble, mot) >= 0;
+void TAB_libere(TabMots* mots) {
+    free(mots->tab);
 }
 
-void TAB_actualise_max_str_size(TabMots* ens, int len) {
-    if (len > ens->max_str_len)
-        ens->max_str_len = len;
+void TAB_tri(TabMots* tab, ModeTri mode, bool croissant) {
+    int (*compare)(const void* a, const void* b);
+    
+    // Vérification des paramètres
+    assert(mode >= TRI_LEXICO && mode <= TRI_APPARITION);
+    croissant = !!croissant;
+
+    compare = cmp_funcs[croissant][mode];
+    qsort(tab->tab, tab->len, sizeof(MotEntry*), compare);
 }
 
-int TAB_ajouter_mot(TabMots *ensemble, char* mot) {
-    MotEntry entry = {
-        .mot = NULL,
-        .nb_occ = 0,
-    };
+// Fonctions de comparaison
 
-    int pos;
+int TAB_compare_tri_lexico_croissant(const void* a, const void* b) {
+    const MotEntry* entry_a = *(MotEntry**)a;
+    const MotEntry* entry_b = *(MotEntry**)b;
 
-    if ((pos = TAB_cherche_mot(ensemble, mot)) >= 0) {
-        ensemble->mots[pos].nb_occ += 1;
-        return 0;
-    }
-
-    char* new_str = strdup(mot);
-
-    entry.mot = new_str;
-
-    if (ensemble->len == ensemble->max_size) {
-        if (!redimensionne(ensemble))
-            return -1;
-    }
-
-    ensemble->mots[ensemble->len] = entry;
-    ensemble->len++;
-
-    TAB_actualise_max_str_size(ensemble, strlen(mot));
-
-    return 1;
+    return strcmp(entry_a->mot, entry_b->mot);
 }
 
-bool TAB_redimensionne(TabMots* ensemble) {
-    int taille = ensemble->len * TAILLE_BLOC * sizeof(MotEntry);
+int TAB_compare_tri_occ_croissant(const void* a, const void* b) {
+    const MotEntry* entry_a = *(MotEntry**)a;
+    const MotEntry* entry_b = *(MotEntry**)b;
     
-    long int *tmp = realloc(
-        ensemble->mots,
-        taille);
+    return entry_a->nb_occ - entry_b->nb_occ;
+}
+
+int TAB_compare_tri_apparition_croissant(const void* a, const void* b) {
+    const MotEntry* entry_a = *(MotEntry**)a;
+    const MotEntry* entry_b = *(MotEntry**)b;
     
-    if (tmp == NULL)
-        return false;
-    
-    ensemble->len = tmp;
-    ensemble->max_size = taille;
-    
-    return true;
+    return entry_a->apparition - entry_b->apparition;
+}
+
+int TAB_compare_tri_lexico_decroissant(const void* a, const void* b) {
+    return -TAB_compare_tri_lexico_croissant(a, b);
+}
+
+int TAB_compare_tri_occ_decroissant(const void* a, const void* b) {
+    return -TAB_compare_tri_occ_croissant(a, b);
+}
+
+int TAB_compare_tri_apparition_decroissant(const void* a, const void* b) {
+    return -TAB_compare_tri_apparition_croissant(a, b);
 }

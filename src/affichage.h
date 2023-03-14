@@ -3,6 +3,6 @@
 
 #include "tableau.h"
 
-void AFF_print_tab(const TabMots* tab);
+void AFF_print_tab(const TabMots tab);
 
 #endif

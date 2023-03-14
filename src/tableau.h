@@ -1,23 +1,37 @@
 #ifndef TABLEAU_INCLUDED
 #define TABLEAU_INCLUDED
 
-#include <stdbool.h>
-#include <stdlib.h>
-#include "mot.h"
+#include "ABR.h"
 
-#define TAILLE_BLOC 150
-
-typedef struct mot {
-    char* mot;
-    int nb_occ;
-} MotEntry;
-
-typedef struct tableau {
-    MotEntry* mots;
-    int max_str_len;
-    int max_size;
+typedef struct TabMots {
+    MotEntry** tab;
     int len;
+    int max_str_len;
 } TabMots;
+
+typedef enum ModeTri {
+    TRI_LEXICO = 0,
+    TRI_NB_OCCURENCES = 1,
+    TRI_APPARITION = 2,
+} ModeTri;
+
+/**
+ * @brief Transforme l'arbre en un tableau de pointeurs
+ * vers des noeuds de l'arbre.
+ * Le tableau est trié selon l'ordre lexicographique.
+ * 
+ * @param ens 
+ * @return TabMots 
+ */
+TabMots TAB_arbre_en_tab(const Mots* ens);
+
+/**
+ * @brief Libère la mémoire alloué pour un tableau
+ * de pointeurs sur noeuds.
+ * 
+ * @param mots 
+ */
+void TAB_libere(TabMots* mots);
 
 /**
  * @brief Trie le tableau par ordre lexicographique
@@ -36,52 +50,51 @@ void TAB_tri_lexico(TabMots* tab, bool croissant);
 void TAB_tri_occ(TabMots* tab, bool croissant);
 
 /**
- * @brief Ajoute un mot au tableau.
+ * @brief Trie le tableau par ordre d'insertion.
  * 
  * @param tab 
+ * @param croissant 
  */
-int TAB_ajouter_mot(TabMots* tab, char* mot);
+void TAB_tri_apparition(TabMots* tab, bool croissant); 
 
 /**
- * @brief Adapte la taille du tableau par TAILLE_BLOC
+ * @brief Trie le tableau selon mode défini.
  * 
  * @param tab 
- * @param nv_size 
- * @return int 
+ * @param mode 
+ * @param croissant 
  */
-bool TAB_redimensionne(TabMots* tab);
+void TAB_tri(TabMots* tab, ModeTri mode, bool croissant);
 
 /**
- * @brief Cherche et renvoie, en cas d'existence,
- * la position du mot dans le tableau.
- * 
- * @param tab 
- * @return int Index du mot dans le tableau, -1 si inexistance
- */
-int TAB_cherche_mot(const TabMots* tab, char* mot);
+ * Fonction de comparaison
+*/
+
+// Ordre lexicographique
+int TAB_compare_tri_lexico_croissant(const void* a, const void* b);
+int TAB_compare_tri_lexico_decroissant(const void* a, const void* b);
+
+// Ordre sur le nombre d'occurrences
+int TAB_compare_tri_occ_croissant(const void* a, const void* b);
+int TAB_compare_tri_occ_decroissant(const void* a, const void* b);
+
+// Ordre par apparition dans le texte
+int TAB_compare_tri_apparition_croissant(const void* a, const void* b);
+int TAB_compare_tri_apparition_decroissant(const void* a, const void* b);
 
 /**
- * @brief Cherche et supprime le mot du tableau
+ * @brief Fonction auxillière permettant de créer un tableau
+ * représantant l'arbre à l'aide d'un parcours infixe.
+ * L'arbre étant trié par ordre lexicographique, la fonction
+ * devrait natuellement renvoyer un tableau trié pointant
+ * vers les noeuds selon cet ordre.
  * 
- * @param tab 
- * @param mot 
+ * @param tab Addresse d'un tableau vers des pointeurs de noeuds.
+ * @param arbre Arbre source
+ * @param i Adresse d'un entier initialisé à 0.
  */
-void TAB_supprimer_mot(const TabMots* tab, char* mot);
+void TAB_arbre_en_tab_aux(MotEntry** tab, MotEntry* arbre, int* i);
 
-/**
- * @brief Détermine si le mot existe déjà.
- * 
- * @param tab 
- * @param mot 
- */
-bool TAB_appartient(const TabMots* tab, char* mot);
-
-/**
- * @brief Alloue et initialise un tableau sur le tas.
- * 
- * @return TabMots* 
- */
-TabMots* TAB_initialiser();
-
+extern int (*cmp_funcs[2][3])(const void* a, const void* b);
 
 #endif

@@ -1,7 +1,7 @@
 #ifndef ALGO_INCLUDED
 #define ALGO_INCLUDED
 
-#include "tableau.h"
+#include "ABR.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -21,7 +21,7 @@
  * @param f 
  * @return int 
  */
-int ALG_mots_apres_x(TabMots* dest, FILE* f, char* x);
+int ALG_mots_apres_x(Mots* dest, FILE* f, char* x);
 
 
 /**
@@ -33,7 +33,7 @@ int ALG_mots_apres_x(TabMots* dest, FILE* f, char* x);
  * @param f 
  * @return int 
  */
-int ALG_mots_avant_x(TabMots* dest, FILE* f, char* x);
+int ALG_mots_avant_x(Mots* dest, FILE* f, char* x);
 
 /**
  * @brief Compte le nombre d'occurences de tous les mots.
@@ -42,6 +42,6 @@ int ALG_mots_avant_x(TabMots* dest, FILE* f, char* x);
  * @param f 
  * @return int 
  */
-int ALG_compter_mots(TabMots* dest, FILE* f);
+int ALG_compter_mots(Mots* dest, FILE* f);
 
 #endif

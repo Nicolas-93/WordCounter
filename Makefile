@@ -25,8 +25,10 @@ $(BUILD_DIR)/$(EXEC): $(OBJS)
 	$(CC) $^ -o $@ $(LIBS)
 
 # Dépendances
-Main.o: Main.c B.h C.h D.h
-B.o: B.c C.h
+main.o: main.c ABR.h algo.h
+ABR.o: ABR.c ABR.h
+algo.o: algo.c algo.h ABR.h
+affichage.o: affichage.c affichage.h
 
 # Création des fichiers objets à partir des fichiers sources
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
