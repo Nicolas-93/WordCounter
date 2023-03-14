@@ -8,24 +8,17 @@
  * caractères alphabétiques.
  *
  * @param mot 
- * @return true 
- * @return false 
+ * @return true Contient uniquement des caractères alphabétiques
+ * @return false Si contient des caractères non alphabétiques
+ * si pointeur NULL
  */
 bool MOT_est_correct(const char* mot);
 
-// Mot* mot_allouer(char* rep);
-
-// void mot_liberer(Mot* mot);
-
 /**
- * @brief Minusculise le mot/
+ * @brief Minusculise le mot
  * 
  * @param rep 
  */
-void MOT_normaliser(char* rep);
-
-
-
-
+void MOT_normaliser(char* mot);
 
 #endif
