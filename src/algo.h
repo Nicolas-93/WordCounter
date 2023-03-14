@@ -2,15 +2,16 @@
 #define ALGO_INCLUDED
 
 #include "ABR.h"
+#include "mot.h"
 #include <stdio.h>
 #include <string.h>
 
 #define SEPARATORS " \n,;:.?!\\\"()-'’"
 
 #define FOREACH_TOKEN(token, line) \
-    for (token = strtok(line, SEPARATORS); \
-         token;                            \
-         token = strtok(NULL, SEPARATORS))
+    for (token = strtok(line, SEPARATORS), MOT_normaliser(token); \
+         token;                                                   \
+         token = strtok(NULL, SEPARATORS), MOT_normaliser(token))
 
 /**
  * @brief Crée un tableau contenant les mots qui suivent

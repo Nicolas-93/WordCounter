@@ -7,7 +7,7 @@
 
 int main(int argc, char* argv[]) {
     Mots* mots = ABR_initialiser();
-    FILE* f = fopen("textes/brassens.txt", "r");
+    FILE* f = fopen("textes/casse_doublons.txt", "r");
     TabMots tab;
 
     ALG_compter_mots(mots, f);
