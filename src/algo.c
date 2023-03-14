@@ -8,7 +8,7 @@
 
 
 int ALG_mots_apres_x(Mots* dest, FILE* f, char* x) {
-    if(!f) {
+    if (!f) {
         fprintf(stderr, "Error reading the file\n");
         return -1;
     }
@@ -46,6 +46,7 @@ int ALG_compter_mots(Mots* dest, FILE* f) {
 
     while ((len_line = getline(&line, &len_buf, f)) != EOF) {
         FOREACH_TOKEN(token, line) {
+            if (!MOT_est_correct(token)) continue;
             ABR_ajouter_mot(dest, token);
         }
     }
