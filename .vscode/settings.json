@@ -6,6 +6,7 @@
         "algo.h": "c",
         "affichage.h": "c",
         "string.h": "c",
-        "tableau.h": "c"
+        "tableau.h": "c",
+        "test.C": "cpp"
     }
 }
