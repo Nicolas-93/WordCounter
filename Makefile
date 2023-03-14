@@ -29,6 +29,7 @@ main.o: main.c ABR.h algo.h
 ABR.o: ABR.c ABR.h
 algo.o: algo.c algo.h ABR.h
 affichage.o: affichage.c affichage.h
+test.o: test.h
 
 # Création des fichiers objets à partir des fichiers sources
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
