@@ -7,13 +7,13 @@
 
 int main(int argc, char* argv[]) {
     Mots* mots = ABR_initialiser();
-    FILE* f = fopen("textes/brassens.txt", "r");
+    FILE* f = fopen("textes/sujet_test_ordre.txt", "r");
     TabMots* tab;
 
-    ALG_mots_avant_x(mots, f, "arbre");
-    // ALG_compter_mots(mots, f);
+    // ALG_mots_avant_x(mots, f, "arbre");
+    ALG_compter_mots(mots, f);
     tab = TAB_arbre_en_tab(mots);
-    TAB_tri(tab, TRI_APPARITION, true);
+    TAB_tri(tab, TRI_NB_OCCURENCES, false);
     AFF_print_tab(tab);
 
     fclose(f);

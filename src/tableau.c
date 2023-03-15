@@ -5,6 +5,35 @@
 #include <string.h>
 #include <assert.h>
 
+/**
+ * @brief Macros pour les fonctions de comparaison
+ * 
+ */
+#define CMP_STR_ASC(a, b)       \
+    do {                        \
+        int cmp = strcmp(a, b); \
+        if (cmp > 0) return 1;  \
+        if (cmp < 0) return -1; \
+    } while(0)
+
+#define CMP_STR_DESC(a, b) \
+    CMP_STR_ASC(b, a)
+
+#define CMP_VAL_ASC(a, b)       \
+    do {                        \
+        int cmp = a - b;        \
+        if (cmp > 0) return 1;  \
+        if (cmp < 0) return -1; \
+    } while(0)
+
+#define CMP_VAL_DESC(a, b) \
+    CMP_VAL_ASC(b, a)
+
+#define CMP_EQUALS() return 0
+
+#define CMP_CAST_ENTRIES(a, b) \
+    const MotEntry* entry_a = *(MotEntry**)a; \
+    const MotEntry* entry_b = *(MotEntry**)b
 
 int (*cmp_funcs[2][3])(const void* a, const void* b) = {
     {
@@ -67,34 +96,45 @@ void TAB_tri(TabMots* tab, ModeTri mode, bool croissant) {
 // Fonctions de comparaison
 
 int TAB_compare_tri_lexico_croissant(const void* a, const void* b) {
-    const MotEntry* entry_a = *(MotEntry**)a;
-    const MotEntry* entry_b = *(MotEntry**)b;
+    CMP_CAST_ENTRIES(a, b);
 
-    return strcmp(entry_a->mot, entry_b->mot);
+    CMP_STR_ASC(entry_a->mot, entry_b->mot);
+    CMP_EQUALS();
 }
 
 int TAB_compare_tri_occ_croissant(const void* a, const void* b) {
-    const MotEntry* entry_a = *(MotEntry**)a;
-    const MotEntry* entry_b = *(MotEntry**)b;
-    
-    return entry_a->nb_occ - entry_b->nb_occ;
+    CMP_CAST_ENTRIES(a, b);
+
+    CMP_VAL_ASC(entry_a->nb_occ, entry_b->nb_occ);
+    CMP_STR_ASC(entry_a->mot, entry_b->mot);
+    CMP_EQUALS();
 }
 
 int TAB_compare_tri_apparition_croissant(const void* a, const void* b) {
-    const MotEntry* entry_a = *(MotEntry**)a;
-    const MotEntry* entry_b = *(MotEntry**)b;
-    
-    return entry_a->apparition - entry_b->apparition;
+    CMP_CAST_ENTRIES(a, b);
+
+    CMP_VAL_ASC(entry_a->apparition, entry_b->apparition);
+    CMP_EQUALS();
 }
 
 int TAB_compare_tri_lexico_decroissant(const void* a, const void* b) {
-    return -TAB_compare_tri_lexico_croissant(a, b);
+    CMP_CAST_ENTRIES(a, b);
+
+    CMP_STR_DESC(entry_a->mot, entry_b->mot);
+    CMP_EQUALS();
 }
 
 int TAB_compare_tri_occ_decroissant(const void* a, const void* b) {
-    return -TAB_compare_tri_occ_croissant(a, b);
+    CMP_CAST_ENTRIES(a, b);
+
+    CMP_VAL_DESC(entry_a->nb_occ, entry_b->nb_occ);
+    CMP_STR_ASC(entry_a->mot, entry_b->mot);
+    CMP_EQUALS();
 }
 
 int TAB_compare_tri_apparition_decroissant(const void* a, const void* b) {
-    return -TAB_compare_tri_apparition_croissant(a, b);
+    CMP_CAST_ENTRIES(a, b);
+
+    CMP_VAL_DESC(entry_a->apparition, entry_b->apparition);
+    CMP_EQUALS();
 }
