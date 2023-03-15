@@ -13,6 +13,13 @@
          token;                                                   \
          token = strtok(NULL, SEPARATORS), MOT_normaliser(token))
 
+typedef enum ModeRecherche {
+    MODE_COMPTER_MOTS,
+    MODE_MOTS_AVANT_X,
+    MODE_MOTS_APRES_X,
+    MODE_EXPRESSION,
+} ModeRecherche;
+
 /**
  * @brief Crée un tableau contenant les mots qui suivent
  * le mot x, depuis le fichier f.

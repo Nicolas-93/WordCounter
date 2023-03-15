@@ -35,7 +35,7 @@ header-includes:
 
 - ``-n`` : trier les mots de la réponse d'après leur nombre d’occurrences de manière décroissante.
 
-- ``-s MOT`` : afficher des lignes qui contiennent chacune, chaque u mot qui suit MOT dans le fichier, suivies d'espaces, suivies du nombre (en base dix d’occurrences du u situées après MOT)
+- ``-s MOT`` ou ``-p MOT``: Affiche les mots suivants/précédents MOT
 
 - ``-e N`` : afficher une ligne pour chaque expression composée de N mots extraite de X suivie d’espaces, suivies du nombre (en base dix d’occurrences de l’expression en question dans le fichier.
 
