@@ -7,10 +7,11 @@
 
 int main(int argc, char* argv[]) {
     Mots* mots = ABR_initialiser();
-    FILE* f = fopen("textes/casse_doublons.txt", "r");
+    FILE* f = fopen("textes/sujet_test_mot_suivant_x.txt", "r");
     TabMots tab;
 
-    ALG_compter_mots(mots, f);
+    ALG_mots_apres_x(mots, f, "ab");
+    // ALG_compter_mots(mots, f);
     tab = TAB_arbre_en_tab(mots);
     TAB_tri(&tab, TRI_APPARITION, true);
     AFF_print_tab(tab);

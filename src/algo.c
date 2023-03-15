@@ -22,6 +22,8 @@ int ALG_mots_apres_x(Mots* dest, FILE* f, char* x) {
     while ((len_line = getline(&line, &len_buf, f)) != EOF) {
         FOREACH_TOKEN(token, line) {
             if (strcmp(token, x) == 0) {
+                if (trouve_avant)
+                    ABR_ajouter_mot(dest, token);
                 trouve_avant = true;
             }
             else if (trouve_avant) {
@@ -31,6 +33,7 @@ int ALG_mots_apres_x(Mots* dest, FILE* f, char* x) {
         }
     }
 
+    free(line);
     return 1;
 }
 
