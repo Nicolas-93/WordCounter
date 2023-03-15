@@ -21,4 +21,14 @@ bool MOT_est_correct(const char* mot);
  */
 void MOT_normaliser(char* mot);
 
+/**
+ * @brief Ecrit le nouveau mot dans mot,
+ * et réalloue la mémoire si nécessaire.
+ * 
+ * @param mot Adresse du mot à remplacer, si NULL, alloue la mémoire
+ * @param nouveau_mot Nouveau mot à écrire dans mot
+ * @return int 1 si réussi, 0 sinon
+ */
+int MOT_remplace_mot(char** mot, size_t* bufsize, char* nouveau_mot);
+
 #endif
