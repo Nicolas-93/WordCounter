@@ -28,20 +28,29 @@ void TAB_arbre_en_tab_aux(MotEntry** tab, MotEntry* arbre, int* i) {
     TAB_arbre_en_tab_aux(tab, arbre->fd, i);
 }
 
-TabMots TAB_arbre_en_tab(const Mots* ens) {
-    TabMots tab;
-    tab.len = ens->len;
-    tab.tab = malloc(tab.len * sizeof(MotEntry*));
-    tab.max_str_len = ens->max_str_len;
+TabMots* TAB_arbre_en_tab(const Mots* ens) {
+    TabMots* tab;
+
+    if (!(tab = malloc(sizeof(TabMots))))
+        return NULL;
+
+    if (!(tab->tab = malloc(ens->len * sizeof(MotEntry*)))) {
+        free(tab);
+        return NULL;
+    }
+    
+    tab->len = ens->len;
+    tab->max_str_len = ens->max_str_len;
     
     int i = 0;
-    TAB_arbre_en_tab_aux(tab.tab, ens->racine, &i);
+    TAB_arbre_en_tab_aux(tab->tab, ens->racine, &i);
 
     return tab;
 }
 
 void TAB_libere(TabMots* mots) {
     free(mots->tab);
+    free(mots);
 }
 
 void TAB_tri(TabMots* tab, ModeTri mode, bool croissant) {

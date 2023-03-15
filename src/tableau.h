@@ -21,9 +21,9 @@ typedef enum ModeTri {
  * Le tableau est trié selon l'ordre lexicographique.
  * 
  * @param ens 
- * @return TabMots 
+ * @return TabMots* 
  */
-TabMots TAB_arbre_en_tab(const Mots* ens);
+TabMots* TAB_arbre_en_tab(const Mots* ens);
 
 /**
  * @brief Libère la mémoire alloué pour un tableau

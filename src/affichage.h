@@ -3,6 +3,11 @@
 
 #include "tableau.h"
 
-void AFF_print_tab(const TabMots tab);
+/**
+ * @brief Affiche le tableau de mots
+ * 
+ * @param tab 
+ */
+void AFF_print_tab(const TabMots* tab);
 
 #endif
