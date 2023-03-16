@@ -13,6 +13,7 @@ typedef struct Parameters {
     struct {
         ModeTri mode;
         bool croissant;
+        TriFunc func;
     } tri;
 
     ModeRecherche mode;
@@ -25,6 +26,9 @@ typedef struct Parameters {
 
 } Parameters;
 
-Parameters parse_args(int argc, char* argv[]);
+Parameters ARGS_parse(int argc, char* argv[]);
+void ARGS_print_help(char* progname);
+TabMots* ARGS_execute_tri(const Mots* mots, Parameters params);
+Mots* ARGS_execute_lecture(Parameters params);
 
 #endif

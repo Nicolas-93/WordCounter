@@ -14,10 +14,10 @@
          token = strtok(NULL, SEPARATORS), MOT_normaliser(token))
 
 typedef enum ModeRecherche {
-    MODE_COMPTER_MOTS,
-    MODE_MOTS_AVANT_X,
-    MODE_MOTS_APRES_X,
-    MODE_EXPRESSION,
+    MODE_COMPTER_MOTS = 0,
+    MODE_MOTS_AVANT_X = 1,
+    MODE_MOTS_APRES_X = 2,
+    MODE_EXPRESSION = 4,
 } ModeRecherche;
 
 /**

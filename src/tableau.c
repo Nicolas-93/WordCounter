@@ -83,8 +83,7 @@ void TAB_libere(TabMots* mots) {
 }
 
 void TAB_tri(TabMots* tab, ModeTri mode, bool croissant) {
-    int (*compare)(const void* a, const void* b);
-    
+    TriFunc compare;
     // Vérification des paramètres
     assert(mode >= TRI_LEXICO && mode <= TRI_APPARITION);
     croissant = !!croissant;

@@ -15,6 +15,8 @@ typedef enum ModeTri {
     TRI_APPARITION = 2,
 } ModeTri;
 
+typedef int (*TriFunc)(const void*, const void*);
+
 /**
  * @brief Transforme l'arbre en un tableau de pointeurs
  * vers des noeuds de l'arbre.

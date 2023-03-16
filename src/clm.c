@@ -2,21 +2,24 @@
 #include "algo.h"
 #include "affichage.h"
 #include "tableau.h"
+#include "args.h"
 #include <stdlib.h>
 #include <stdio.h>
 
+Mots* execute_lecture(Parameters params);
+TabMots* execute_tri(const Mots* mots, Parameters params);
+
 int main(int argc, char* argv[]) {
-    Mots* mots = ABR_initialiser();
-    FILE* f = fopen("textes/sujet_test_ordre.txt", "r");
+    
+    Parameters params = ARGS_parse(argc, argv);
+    Mots* mots;
     TabMots* tab;
 
-    // ALG_mots_avant_x(mots, f, "arbre");
-    ALG_compter_mots(mots, f);
-    tab = TAB_arbre_en_tab(mots);
-    TAB_tri(tab, TRI_NB_OCCURENCES, false);
+    mots = ARGS_execute_lecture(params);
+    tab = ARGS_execute_tri(mots, params);
     AFF_print_tab(tab);
 
-    fclose(f);
+    fclose(params.file);
     ABR_libere(mots);
     TAB_libere(tab);
 
