@@ -2,6 +2,7 @@
 #include "args.h"
 #include "algo.h"
 #include "tableau.h"
+#include "test.h"
 
 Parameters ARGS_parse(int argc, char* argv[]) {
     Parameters params = {
@@ -18,49 +19,69 @@ Parameters ARGS_parse(int argc, char* argv[]) {
         .file = NULL,
         .test_unitaire = false,
     };
+    
+    static struct option long_options[] = {
+        {"help", no_argument, 0, 'h'},
+        {"test", no_argument, 0, 't'},
+        {"lexico", no_argument, 0, 'a'},
+        {"occ", no_argument, 0, 'n'},
+        {"avant", required_argument, 0, 'p'},
+        {"apres", required_argument, 0, 's'},
+        {"expr", required_argument, 0, 'e'},
+        {0, 0, 0, 0},
+    };
 
     int opt;
-    while ((opt = getopt(argc, argv, "hanp:s:e:")) != EOF) {
+    int option_index = 0;
+
+    while ((opt = getopt_long_only(argc, argv, "hanp:s:e:", long_options, &option_index)) != EOF) {
         switch (opt) {
+        case 'a':
+            params.tri.mode = TRI_LEXICO;
+            params.tri.croissant = true;
+            params.tri.func = TAB_compare_tri_lexico_croissant;
+            break;
+        case 'n':
+            params.tri.mode = TRI_NB_OCCURENCES;
+            params.tri.croissant = false;
+            params.tri.func = TAB_compare_tri_occ_decroissant;
+            break;
 
-            case 'a':
-                params.tri.mode = TRI_LEXICO;
-                params.tri.croissant = true;
-                params.tri.func = TAB_compare_tri_lexico_croissant;
-                break;
-            case 'n':
-                params.tri.mode = TRI_NB_OCCURENCES;
-                params.tri.croissant = false;
-                params.tri.func = TAB_compare_tri_occ_decroissant;
-                break;
+        case 'p':
+            params.mode = MODE_MOTS_AVANT_X;
+            params.recherche.mot = optarg;
+            break;
+        case 's':
+            params.mode = MODE_MOTS_APRES_X;
+            params.recherche.mot = optarg;
+            break;
+        case 't':
+            params.test_unitaire = true;
+            break;
 
-            case 'p':
-                params.mode = MODE_MOTS_AVANT_X;
-                params.recherche.mot = optarg;
-                break;
-            case 's':
-                params.mode = MODE_MOTS_APRES_X;
-                params.recherche.mot = optarg;
-                break;
+        case 'e':
+            fprintf(stderr, "hi\n");
+            params.mode = MODE_EXPRESSION;
+            if (!(params.recherche.len_expr = atoi(optarg))) {
+                fprintf(
+                    stderr,
+                    "Erreur: la longueur de l'expression "
+                    "doit être supérieure ou égale à 1.\n");
+            }
+            break;
 
-            case 'e':
-                params.mode = MODE_EXPRESSION;
-                if (!(params.recherche.len_expr = atoi(optarg))) {
-                    fprintf(
-                        stderr,
-                        "Erreur: la longueur de l'expression"
-                        "doit être supérieur ou égale à 1.\n");
-                }
-                break;
-            case 'h':
-            case '?':
-                ARGS_print_help(argv[0]);
-                exit(EXIT_SUCCESS);
-                break;
-            default:
-                break;
+        case '?':
+        case 'h':
+            ARGS_print_help(argv[0]);
+            exit(EXIT_SUCCESS);
+            break;
+        default:
+            break;
         }
     }
+
+    if (params.test_unitaire)
+        exit(test());
 
     if (optind == argc) {
         fprintf(stderr, "Erreur: aucun fichier spécifié.\n");
@@ -68,19 +89,14 @@ Parameters ARGS_parse(int argc, char* argv[]) {
     }
 
     if (optind < argc) {
-
-        // Pour respecter la consigne, et eviter d'utiliser getopt_long_only
-        if (strcmp(argv[optind], "-test") == 0) {
-            params.test_unitaire = true;
-        }
-        else
-            params.filename = argv[optind];
+        params.filename = argv[optind];
 
         if (!(params.file = fopen(params.filename, "r"))) {
             perror("Erreur d'ouverture de fichier :");
             exit(EXIT_FAILURE);
         }
     }
+
 
     return params;
 }

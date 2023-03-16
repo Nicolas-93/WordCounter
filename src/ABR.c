@@ -35,9 +35,9 @@ MotEntry* ABR_cherche_mot(const Mots* ensemble, char* mot) {
     MotEntry* a = ensemble->racine;
 
     while (a) {
-        if (EQUALS(a->mot, mot))
+        if (STR_EQUALS(a->mot, mot))
             return a;
-        if (LESS_THAN(mot, a->mot))
+        if (STR_LESS_THAN(mot, a->mot))
             a = LEFT_NODE(a);
         else
             a = RIGHT_NODE(a);
@@ -60,9 +60,9 @@ MotEntry* ABR_ajout_aux(MotEntry** a, char* mot, int apparition) {
         *a = ABR_alloue_noeud(mot, apparition);
         return *a;
     }
-    if (EQUALS((*a)->mot, mot))
+    if (STR_EQUALS((*a)->mot, mot))
         return *a;
-    if (LESS_THAN(mot, (*a)->mot))
+    if (STR_LESS_THAN(mot, (*a)->mot))
         return ABR_ajout_aux(&LEFT_NODE(*a), mot, apparition);
     else
         return ABR_ajout_aux(&RIGHT_NODE(*a), mot, apparition);

@@ -21,11 +21,11 @@ typedef struct tableau {
 
 
 // Fonctions de comparaison nécessaires pour un ABR
-#define LESS_THAN(a, b)         (strcmp((a), (b)) <  0)
-#define GREATHER_THAN(a, b)     (strcmp((a), (b)) >  0)
-#define GREATHER_OR_EQUAL(a, b) (strcmp((a), (b)) >= 0)
-#define LESS_OR_EQUAL(a, b)     (strcmp((a), (b)) <= 0)
-#define EQUALS(a, b)            (strcmp((a), (b)) == 0)
+#define STR_LESS_THAN(a, b)         (strcmp((a), (b)) <  0)
+#define STR_GREATHER_THAN(a, b)     (strcmp((a), (b)) >  0)
+#define STR_GREATHER_OR_EQUAL(a, b) (strcmp((a), (b)) >= 0)
+#define STR_LESS_OR_EQUAL(a, b)     (strcmp((a), (b)) <= 0)
+#define STR_EQUALS(a, b)            (strcmp((a), (b)) == 0)
 
 // Initialisation d'un arbre
 #define BTREE_INIT(tree) ((tree) = NULL)
