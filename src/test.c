@@ -20,8 +20,8 @@ TestFunc tests[] = {
         test_ABR_ajouter_mot,
         test_ABR_cherche_mot,
         test_ABR_appartient,
-        test_TAB_tri,
         test_ALG_compter_mots,
+        test_TAB_tri,
         test_ALG_mots_avant_x,
         test_ALG_mots_apres_x,
 };
@@ -52,28 +52,62 @@ int test_MOT_normaliser() {
 
 int test_TAB_tri() {
 
-    Mots* ens1 = ABR_initialiser();
+    Mots* ens1 = ABR_initialiser(), *ens2 = ABR_initialiser();
     
-    STRING_ARRAY_TO_ENS(t1, ens1);
-    TabMots* tab = TAB_arbre_en_tab(ens1);
-    // l'arbre est sense etre deja trie lexicographiquement
-    test_assert(STR_EQUALS(tab->tab[0]->mot, "aaa"));
-    test_assert(STR_EQUALS(tab->tab[4]->mot, "zzz"));
-    
-    TAB_tri(tab, TRI_LEXICO, false);
-    test_assert(STR_EQUALS(tab->tab[0]->mot, "zzz"));
-    test_assert(STR_EQUALS(tab->tab[4]->mot, "aaa"));
-    
-    TAB_tri(tab, TRI_APPARITION, true);
-    test_assert(STR_EQUALS(tab->tab[0]->mot, "zzz"));
-    test_assert(STR_EQUALS(tab->tab[4]->mot, "pfff"));
-    
-    TAB_tri(tab, TRI_NB_OCCURENCES, false);
-    test_assert(STR_EQUALS(tab->tab[0]->mot, "zzz"));
-    test_assert(STR_EQUALS(tab->tab[4]->mot, "pfff"));
+    // Test 1 : Avec le tableau t1 //
 
-    TAB_libere(tab);
+    STRING_ARRAY_TO_ENS(t1, ens1);
+    TabMots* tab1 = TAB_arbre_en_tab(ens1);
+
+    // l'arbre est sensé être déja trié lexicographiquement
+    test_assert(STR_EQUALS(tab1->tab[0]->mot, "aaa"));
+    test_assert(STR_EQUALS(tab1->tab[4]->mot, "zzz"));
+    
+    TAB_tri(tab1, TRI_LEXICO, false);
+    test_assert(STR_EQUALS(tab1->tab[0]->mot, "zzz"));
+    test_assert(STR_EQUALS(tab1->tab[4]->mot, "aaa"));
+    
+    TAB_tri(tab1, TRI_APPARITION, true);
+    test_assert(STR_EQUALS(tab1->tab[0]->mot, "zzz"));
+    test_assert(STR_EQUALS(tab1->tab[4]->mot, "pfff"));
+    
+    TAB_tri(tab1, TRI_NB_OCCURENCES, false);
+    test_assert(STR_EQUALS(tab1->tab[0]->mot, "zzz"));
+    test_assert(STR_EQUALS(tab1->tab[4]->mot, "pfff"));
+
+    // Test 2 : Avec le texte sujet_test_ordre.txt //
+
+    FILE* f1 = fopen("textes/sujet_test_ordre.txt", "r");
+    test_assert(f1);
+
+    ALG_compter_mots(ens2, f1);
+    TabMots* tab2 = TAB_arbre_en_tab(ens2);
+    fclose(f1);
+
+    // l'arbre est sensé être déja trié lexicographiquement
+    test_assert(STR_EQUALS(tab2->tab[0]->mot, "deux"));
+    test_assert(STR_EQUALS(tab2->tab[1]->mot, "deuxdeux"));
+    test_assert(STR_EQUALS(tab2->tab[3]->mot, "un"));
+    
+    TAB_tri(tab2, TRI_APPARITION, true);
+    test_assert(STR_EQUALS(tab2->tab[0]->mot, "trois"));
+    test_assert(STR_EQUALS(tab2->tab[3]->mot, "deuxdeux"));
+    
+    TAB_tri(tab2, TRI_NB_OCCURENCES, false);
+    test_assert(STR_EQUALS(tab2->tab[0]->mot, "deux"));
+    test_assert(STR_EQUALS(tab2->tab[3]->mot, "trois"));
+
+    // Retrions lexicographiquement
+    TAB_tri(tab2, TRI_LEXICO, true);
+    test_assert(STR_EQUALS(tab2->tab[0]->mot, "deux"));
+    test_assert(STR_EQUALS(tab2->tab[1]->mot, "deuxdeux"));
+    test_assert(STR_EQUALS(tab2->tab[3]->mot, "un"));
+
+    TAB_libere(tab1);
+    TAB_libere(tab2);
     ABR_libere(ens1);
+    ABR_libere(ens2);
+
     return 1;
 }
 
