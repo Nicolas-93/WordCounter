@@ -73,6 +73,6 @@ int TAB_compare_tri_apparition_decroissant(const void* a, const void* b);
  */
 void TAB_arbre_en_tab_aux(MotEntry** tab, MotEntry* arbre, int* i);
 
-extern int (*cmp_funcs[2][3])(const void* a, const void* b);
+extern TriFunc cmp_funcs[2][3];
 
 #endif

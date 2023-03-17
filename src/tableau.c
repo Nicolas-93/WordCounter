@@ -35,7 +35,7 @@
     const MotEntry* entry_a = *(MotEntry**)a; \
     const MotEntry* entry_b = *(MotEntry**)b
 
-int (*cmp_funcs[2][3])(const void* a, const void* b) = {
+TriFunc cmp_funcs[2][3] = {
     {
         TAB_compare_tri_lexico_decroissant,
         TAB_compare_tri_occ_decroissant,
