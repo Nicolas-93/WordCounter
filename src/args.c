@@ -60,9 +60,8 @@ Parameters ARGS_parse(int argc, char* argv[]) {
             break;
 
         case 'e':
-            fprintf(stderr, "hi\n");
             params.mode = MODE_EXPRESSION;
-            if (!(params.recherche.len_expr = atoi(optarg))) {
+            if ((params.recherche.len_expr = atoi(optarg)) < 1) {
                 fprintf(
                     stderr,
                     "Erreur: la longueur de l'expression "
@@ -103,15 +102,15 @@ Parameters ARGS_parse(int argc, char* argv[]) {
 
 void ARGS_print_help(char* progname) {
     printf(
-        "Usage: %s [-hanp] [-p=|-s=|-e=] FILE\n"
+        "Usage : %s [OPTION]... [FICHIER]\n"
         "Options:\n"
-        "  -h\t\tAffiche ce message d'aide.\n"
-        "  -a\t\tTrie les mots par ordre alphabétique croissant.\n"
-        "  -n\t\tTrie les mots par nombre d'occurences décroissant, puis par ordre lexicographique.\n"
-        "  -p MOT\tAffiche les mots avant le mot MOT.\n"
-        "  -s MOT\tAffiche les mots après le mot MOT.\n"
-        "  -e N\t\tAffiche les expressions de longueur N mots.\n"
-        "  -test\t\tExécute les tests unitaires.\n",
+        "  -h, --help\t\tAffiche ce message d'aide.\n"
+        "  -a, --lexico\t\tTrie les mots par ordre lexicographique croissant.\n"
+        "  -n, --occ\t\tTrie les mots par nombre d'occurences décroissant, puis par ordre lexicographique.\n"
+        "  -p, --avant=MOT\tAffiche les mots avant le mot MOT.\n"
+        "  -s, --apres=MOT\tAffiche les mots après le mot MOT.\n"
+        "  -e, --expr=N\t\tAffiche les expressions de longueur N mots.\n"
+        "  -test\t\t\tExécute les tests unitaires.\n",
         progname);   
 }
 
@@ -132,6 +131,7 @@ Mots* ARGS_execute_lecture(Parameters params) {
         ALG_mots_apres_x(mots, params.file, params.recherche.mot);
         break;
     case MODE_EXPRESSION:
+        fprintf(stderr, "Expressions pas encore implémentées.\n");
         // ALG_expression(mots, params.file, params.recherche.len_expr);
         break;
     default:
