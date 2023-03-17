@@ -34,6 +34,24 @@ int test() {
     return 1;
 }
 
+void test_assert_print(const char* file, int line, const char* func, const char* expr, int res) {
+    FILE* stream;
+    char* msg;
+    if (res) {
+        stream = stdout;
+        msg = COLOR_STR(COLOR_GREEN, "Assertion correcte : ");
+    } else { 
+        stream = stderr;
+        msg = COLOR_STR(COLOR_RED, "Erreur d'assertion : ");
+    } 
+    fprintf(stream, 
+        "%s"
+        COLOR_STR(COLOR_BLUE, "%s:%d : ")
+        COLOR_STR(COLOR_YELLOW, "%s : ")
+        COLOR_STR(COLOR_R, "'%s'\n"),
+        msg, file, line, func, expr);
+}
+
 int test_MOT_normaliser() {
     char t1[] = "HelLo WORLd";
     char t2[] = "LicEnCE 1";

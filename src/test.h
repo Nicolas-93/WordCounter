@@ -6,18 +6,22 @@
 #include "tableau.h"
 #include "affichage.h"
 #include "ABR.h"
+#include <stdio.h>
 
-#define RED_COLOR "\x1b[31m"
-#define GREEN_COLOR "\x1b[32m"
-#define RESET_COLOR "\x1b[0m"
+#define COLOR_RED "\x1b[31m"
+#define COLOR_GREEN "\x1b[32m"
+#define COLOR_YELLOW "\x1b[33m"
+#define COLOR_BLUE "\x1b[34m"
+#define COLOR_R "\x1b[0m"
+
+#define COLOR_STR(color, str) color str COLOR_R
 
 #define test_assert(expr) \
     do { \
-        if (!(expr)) { \
-            fprintf(stderr, RED_COLOR"Erreur d'assertion : "RESET_COLOR "%s:%d: %s : '%s'\n",__FILE__, __LINE__, __func__, #expr); \
+        int res = !!(expr); \
+        test_assert_print(__FILE__, __LINE__, __func__, #expr, res); \
+        if (!(res)) { \
             return 0; \
-        } else { \
-            fprintf(stdout, GREEN_COLOR"Assertion correcte : "RESET_COLOR "%s:%d: %s : '%s'\n",__FILE__, __LINE__, __func__, #expr); \
         } \
     } while (0)
 
@@ -42,6 +46,11 @@ typedef int (*TestFunc)(void);
  */
 int test();
 
+/**
+ * @brief Affiche le résultat d'une assertion.
+ * 
+ */
+void test_assert_print(const char* file, int line, const char* func, const char* expr, int res) ;
 
 /* mot */
 int test_MOT_est_correct();

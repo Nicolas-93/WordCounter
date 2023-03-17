@@ -4,6 +4,7 @@ rapport.pdf
 build/
 logos/
 tmp/
+.vscode/
 
 # Prerequisites
 *.d
