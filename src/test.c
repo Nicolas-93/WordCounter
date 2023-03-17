@@ -14,16 +14,16 @@ static char* t1[] = {
 };
 
 TestFunc tests[] = {
-        test_MOT_normaliser,
-        test_ABR_initialiser,
-        test_ABR_alloue_noeud,
-        test_ABR_ajouter_mot,
-        test_ABR_cherche_mot,
-        test_ABR_appartient,
-        test_ALG_compter_mots,
-        test_TAB_tri,
-        test_ALG_mots_avant_x,
-        test_ALG_mots_apres_x,
+    test_MOT_normaliser,
+    test_ABR_initialiser,
+    test_ABR_alloue_noeud,
+    test_ABR_ajouter_mot,
+    test_ABR_cherche_mot,
+    test_ABR_appartient,
+    test_ALG_compter_mots,
+    test_TAB_tri,
+    test_ALG_mots_avant_x,
+    test_ALG_mots_apres_x,
 };
 
 int test() {
@@ -46,6 +46,17 @@ int test_MOT_normaliser() {
     test_assert(STR_EQUALS(t1, "hello world"));
     test_assert(STR_EQUALS(t2, "licence 1"));
     test_assert(STR_EQUALS(t3, "ù$*ùù corr$^*ùm*pu"));
+
+    return 1;
+}
+
+int test_MOT_est_correct() {
+    test_assert(MOT_est_correct("Hello"));
+    test_assert(!MOT_est_correct(""));
+    test_assert(!MOT_est_correct("$ù*é-'"));
+    test_assert(!MOT_est_correct("sa1ut"));
+    test_assert(!MOT_est_correct("sa1ut3"));
+    test_assert(!MOT_est_correct("5a1ut"));
 
     return 1;
 }

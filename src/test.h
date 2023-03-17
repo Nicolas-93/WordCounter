@@ -42,9 +42,11 @@ typedef int (*TestFunc)(void);
  */
 int test();
 
-/* Les fonctions qui testent la fonctionnalité de celles du module mot */
-int test_MOT_normaliser();
 
+/* mot */
+int test_MOT_est_correct();
+
+int test_MOT_normaliser();
 
 /* tableau */
 int test_TAB_arbre_en_tab();
