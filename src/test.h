@@ -45,17 +45,7 @@ int test_MOT_normaliser();
 /* tableau */
 int test_TAB_arbre_en_tab();
 
-int test_TAB_tri_lexico();
-
-int test_TAB_tri_occ();
-
-int test_TAB_tri_apparition();
-
 int test_TAB_tri();
-
-int test_TAB_compare_tri_occ_decroissant();
-
-int test_TAB_arbre_en_tab_aux();
 
 /* algo */
 
@@ -64,5 +54,11 @@ int test_ALG_mots_avant_x();
 int test_ALG_compter_mots();
 
 int test_ALG_mots_apres_x();
+
+/* ABR */
+
+int test_ABR_initialiser();
+
+int test_ABR_alloue_noeud();
 
 #endif

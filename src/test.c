@@ -11,7 +11,6 @@ static char* t1[] = {
         "aaa", "aaa", "aaa",
         "caa", "caa",
         "pfff"};
-    
 
 int test() {
     int res = 1;
@@ -21,6 +20,8 @@ int test() {
     res &= test_ALG_compter_mots();
     res &= test_ALG_mots_apres_x();
     res &= test_ALG_mots_avant_x();
+    res &= test_ABR_initialiser();
+    res &= test_ABR_alloue_noeud();
 
     return res;
 }
@@ -39,7 +40,7 @@ int test_MOT_normaliser() {
     test_assert(STR_EQUALS(t3, "ù$*ùù corr$^*ùm*pu"));
 
     return 1;
-}        
+}
 
 int test_TAB_tri() {
 
@@ -69,14 +70,17 @@ int test_TAB_tri() {
 }
 
 int test_ALG_compter_mots() {
-    Mots* ens1 = ABR_initialiser();
+    Mots* ens1 = ABR_initialiser(), *ens2 = ABR_initialiser();
     test_assert(ens1);
     
-    FILE* f = fopen("textes/sujet_test_mot_suivant_x.txt", "r");
-    test_assert(f);
+    FILE* f1 = fopen("textes/sujet_test_mot_suivant_x.txt", "r");
+    FILE* f2 = fopen("textes/casse_doublons.txt", "r");
+    test_assert(f1 && f2);
 
-    ALG_compter_mots(ens1, f);
-    fclose(f);
+    ALG_compter_mots(ens1, f1);
+    ALG_compter_mots(ens2, f2);
+    fclose(f1);
+    fclose(f2);
 
     test_assert(ABR_ASSERT_OCCURENCES(ens1, "ab", 8));
     test_assert(ABR_ASSERT_OCCURENCES(ens1, "aaa", 3));
@@ -84,7 +88,12 @@ int test_ALG_compter_mots() {
     test_assert(ABR_ASSERT_OCCURENCES(ens1, "a", 3));
     test_assert(ABR_ASSERT_OCCURENCES(ens1, "b", 3));
     
+    test_assert(ABR_ASSERT_OCCURENCES(ens2, "bonjour", 2));
+    test_assert(ABR_ASSERT_OCCURENCES(ens2, "salut", 3));
+    test_assert(ABR_ASSERT_OCCURENCES(ens2, "voila", 1));
+
     ABR_libere(ens1);
+    ABR_libere(ens2);
     return 1;
 }
 
@@ -129,5 +138,36 @@ int test_ALG_mots_avant_x() {
     test_assert(ABR_cherche_mot(ens1, "abc") == NULL);
 
     ABR_libere(ens1);
+    return 1;
+}
+
+int test_ABR_initialiser() {
+    Mots* ens = ABR_initialiser();
+    test_assert(ens);
+    
+    test_assert(ens->racine == NULL);
+    test_assert(ens->len == 0);
+    test_assert(ens->max_str_len == 0);
+
+    ABR_libere(ens);
+
+    return 1;
+}
+
+int test_ABR_alloue_noeud() {
+    char* mot = "there is no node";
+    MotEntry* entry = ABR_alloue_noeud(mot, 89);
+    test_assert(entry);
+    
+    test_assert(STR_EQUALS(entry->mot, mot));
+    test_assert(entry->mot != mot); // Le mot est copié
+    
+    test_assert(entry->fg == NULL);
+    test_assert(entry->fd == NULL);
+    test_assert(entry->apparition == 89);
+    test_assert(entry->nb_occ == 1);
+
+    ABR_libere_helper(&entry);
+
     return 1;
 }
