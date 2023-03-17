@@ -8,7 +8,7 @@ CFLAGS=-fdiagnostics-color=always -Wall -pedantic -std=gnu17 -g -O0
 TP_N=6
 NOM_ZIP=TP$(TP_N)_SEBAN_POUYANFAR.zip
 EXEC=clm
-CONTENU_ZIP=$(SRC_DIR) $(INC_DIR) .clang-format .clang-tidy Makefile rapport.pdf
+CONTENU_ZIP=$(SRC_DIR) $(INC_DIR) .clang-format .clang-tidy Makefile rapport.pdf textes/
 
 SOURCES=$(wildcard $(SRC_DIR)/*.c)
 HEADERS=$(wildcard $(INC_DIR)/*.h)
