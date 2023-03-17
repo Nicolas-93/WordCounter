@@ -1,5 +1,4 @@
 #include "ABR.h"
-#include "algo.h"
 #include "affichage.h"
 #include "tableau.h"
 #include "args.h"
