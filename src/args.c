@@ -81,7 +81,7 @@ Parameters ARGS_parse(int argc, char* argv[]) {
     }
 
     if (params.test_unitaire)
-        exit(test());
+        exit(!test());
 
     if (optind == argc) {
         fprintf(stderr, "Erreur: aucun fichier spécifié.\n");
@@ -103,7 +103,7 @@ Parameters ARGS_parse(int argc, char* argv[]) {
 
 void ARGS_print_help(char* progname) {
     printf(
-        "Usage: %s [-hanp] [-s|-p|-e] FILE\n"
+        "Usage: %s [-hanp] [-p=|-s=|-e=] FILE\n"
         "Options:\n"
         "  -h\t\tAffiche ce message d'aide.\n"
         "  -a\t\tTrie les mots par ordre alphabétique croissant.\n"
@@ -111,7 +111,7 @@ void ARGS_print_help(char* progname) {
         "  -p MOT\tAffiche les mots avant le mot MOT.\n"
         "  -s MOT\tAffiche les mots après le mot MOT.\n"
         "  -e N\t\tAffiche les expressions de longueur N mots.\n"
-        "  -test\t\tLance les tests unitaires.\n",
+        "  -test\t\tExécute les tests unitaires.\n",
         progname);   
 }
 
