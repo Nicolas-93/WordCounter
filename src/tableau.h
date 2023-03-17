@@ -33,31 +33,7 @@ TabMots* TAB_arbre_en_tab(const Mots* ens);
  * 
  * @param mots 
  */
-void TAB_libere(TabMots* mots);
-
-/**
- * @brief Trie le tableau par ordre lexicographique
- * 
- * @param tab 
- * @param croissant 
- */
-void TAB_tri_lexico(TabMots* tab, bool croissant);
-
-/**
- * @brief Trie le tableau par nombre d'occurences.
- * 
- * @param tab 
- * @param croissant 
- */
-void TAB_tri_occ(TabMots* tab, bool croissant);
-
-/**
- * @brief Trie le tableau par ordre d'insertion.
- * 
- * @param tab 
- * @param croissant 
- */
-void TAB_tri_apparition(TabMots* tab, bool croissant); 
+void TAB_libere(TabMots* mots); 
 
 /**
  * @brief Trie le tableau selon mode défini.
