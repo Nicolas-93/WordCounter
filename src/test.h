@@ -21,15 +21,19 @@
         } \
     } while (0)
 
+#define SIZEOF_ARRAY(array) (sizeof(array) / sizeof(array[0]))
+
 #define STRING_ARRAY_TO_ENS(array, ens) \
     do { \
-        for (int i = 0; i < sizeof(array) / sizeof(array[0]); i++) { \
+        for (int i = 0; i < SIZEOF_ARRAY(array); i++) { \
             ABR_ajouter_mot(ens, array[i]); \
         } \
     } while (0)
 
 #define ABR_ASSERT_OCCURENCES(ens, mot, nb) \
     (ABR_cherche_mot(ens, mot)->nb_occ == (nb))
+
+typedef int (*TestFunc)(void);
 
 /**
  * @brief Lance tous les tests unitaires.

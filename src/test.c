@@ -6,23 +6,33 @@
 
 
 static char* t1[] = {
-        "zzz", "zzz", "zzz", "zzz", "zzz",
-        "abc", "abc", "abc", "abc",
-        "aaa", "aaa", "aaa",
-        "caa", "caa",
-        "pfff"};
+    "zzz", "zzz", "zzz", "zzz", "zzz",
+    "abc", "abc", "abc", "abc",
+    "aaa", "aaa", "aaa",
+    "caa", "caa",
+    "pfff"
+};
+
+TestFunc tests[] = {
+        test_MOT_normaliser,
+        test_TAB_tri,
+        test_ALG_compter_mots,
+        test_ALG_mots_apres_x,
+        test_ALG_mots_avant_x,
+        test_ABR_initialiser,
+        test_ABR_alloue_noeud,
+        // test_ABR_cherche_mot,
+        // test_ABR_appartient,
+        // test_ABR_actualise_max_str_size,
+        // test_ABR_ajout_aux,
+        // test_ABR_ajouter_mot,
+};
 
 int test() {
     int res = 1;
-
-    res &= test_MOT_normaliser();
-    res &= test_TAB_tri();
-    res &= test_ALG_compter_mots();
-    res &= test_ALG_mots_apres_x();
-    res &= test_ALG_mots_avant_x();
-    res &= test_ABR_initialiser();
-    res &= test_ABR_alloue_noeud();
-
+    for (int i = 0; i < SIZEOF_ARRAY(tests); i++) {
+        res &= tests[i]();
+    }
     return res;
 }
 
