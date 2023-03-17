@@ -21,7 +21,7 @@ TestFunc tests[] = {
         test_ALG_mots_avant_x,
         test_ABR_initialiser,
         test_ABR_alloue_noeud,
-        // test_ABR_cherche_mot,
+        test_ABR_cherche_mot,
         // test_ABR_appartient,
         // test_ABR_actualise_max_str_size,
         // test_ABR_ajout_aux,
@@ -178,6 +178,33 @@ int test_ABR_alloue_noeud() {
     test_assert(entry->nb_occ == 1);
 
     ABR_libere_helper(&entry);
+
+    return 1;
+}
+
+int test_ABR_cherche_mot() {
+    Mots* ens = ABR_initialiser();
+    MotEntry* entry;
+    test_assert(ens);
+    
+    // Recherche dans un arbre vide
+    entry = ABR_cherche_mot(ens, t1[0]);
+    test_assert(entry == NULL);
+
+    // Recherche dans un arbre non vide
+    ABR_ajouter_mot(ens, t1[0]);
+    ABR_ajouter_mot(ens, t1[0]);
+    ABR_ajouter_mot(ens, t1[1]);
+
+    entry = ABR_cherche_mot(ens, t1[0]);
+    test_assert(entry != NULL);
+    test_assert(STR_EQUALS(entry->mot, t1[0]));
+
+    // Recherche d'un mot NULL
+    entry = ABR_cherche_mot(ens, NULL);
+    test_assert(entry == NULL);
+
+    ABR_libere(ens);
 
     return 1;
 }

@@ -65,4 +65,6 @@ int test_ABR_initialiser();
 
 int test_ABR_alloue_noeud();
 
+int test_ABR_cherche_mot();
+
 #endif

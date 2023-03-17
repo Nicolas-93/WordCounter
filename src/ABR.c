@@ -34,10 +34,16 @@ MotEntry* ABR_alloue_noeud(char* mot, int apparition) {
 MotEntry* ABR_cherche_mot(const Mots* ensemble, char* mot) {
     MotEntry* a = ensemble->racine;
 
+    if (!mot)
+        return NULL;
+
+    int cmp;
+
     while (a) {
-        if (STR_EQUALS(a->mot, mot))
+        cmp = strcmp(mot, a->mot);
+        if (cmp == 0)
             return a;
-        if (STR_LESS_THAN(mot, a->mot))
+        if (cmp < 0)
             a = LEFT_NODE(a);
         else
             a = RIGHT_NODE(a);
