@@ -81,6 +81,9 @@ int ABR_ajouter_mot(Mots *ensemble, char* mot) {
 
     MotEntry* entry;
 
+    if (!mot)
+        return -1;
+
     if ((entry = ABR_cherche_mot(ensemble, mot))) {
         entry->nb_occ += 1;
         return 0;

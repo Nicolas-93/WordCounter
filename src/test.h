@@ -67,4 +67,8 @@ int test_ABR_alloue_noeud();
 
 int test_ABR_cherche_mot();
 
+int test_ABR_appartient();
+
+int test_ABR_ajouter_mot();
+
 #endif

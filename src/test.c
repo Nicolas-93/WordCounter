@@ -15,25 +15,23 @@ static char* t1[] = {
 
 TestFunc tests[] = {
         test_MOT_normaliser,
-        test_TAB_tri,
-        test_ALG_compter_mots,
-        test_ALG_mots_apres_x,
-        test_ALG_mots_avant_x,
         test_ABR_initialiser,
         test_ABR_alloue_noeud,
+        test_ABR_ajouter_mot,
         test_ABR_cherche_mot,
-        // test_ABR_appartient,
-        // test_ABR_actualise_max_str_size,
-        // test_ABR_ajout_aux,
-        // test_ABR_ajouter_mot,
+        test_ABR_appartient,
+        test_TAB_tri,
+        test_ALG_compter_mots,
+        test_ALG_mots_avant_x,
+        test_ALG_mots_apres_x,
 };
 
 int test() {
-    int res = 1;
     for (int i = 0; i < SIZEOF_ARRAY(tests); i++) {
-        res &= tests[i]();
+        if (!tests[i]())
+            return 0;
     }
-    return res;
+    return 1;
 }
 
 int test_MOT_normaliser() {
@@ -206,5 +204,50 @@ int test_ABR_cherche_mot() {
 
     ABR_libere(ens);
 
+    return 1;
+}
+
+int test_ABR_appartient() {
+    Mots* ens = ABR_initialiser();
+    test_assert(ens);
+
+    // Recherche dans un arbre vide
+    test_assert(ABR_appartient(ens, t1[0]) == false);
+
+    // Recherche dans un arbre non vide
+    ABR_ajouter_mot(ens, t1[0]);
+    ABR_ajouter_mot(ens, t1[0]);
+    ABR_ajouter_mot(ens, t1[1]);
+
+    test_assert(ABR_appartient(ens, t1[0]) == true);
+
+    // Recherche d'un mot inexistant
+    test_assert(ABR_appartient(ens, "Bye!") == false);
+
+    // Recherche d'un mot NULL
+    test_assert(ABR_appartient(ens, NULL) == false);
+
+    ABR_libere(ens);
+    return 1;
+}
+
+int test_ABR_ajouter_mot() {
+    Mots* ens = ABR_initialiser();
+    test_assert(ens);
+
+    STRING_ARRAY_TO_ENS(t1, ens);
+    test_assert(ABR_ASSERT_OCCURENCES(ens, "zzz", 5));
+    test_assert(ABR_ASSERT_OCCURENCES(ens, "abc", 4));
+    test_assert(ABR_ASSERT_OCCURENCES(ens, "aaa", 3));
+    test_assert(ABR_ASSERT_OCCURENCES(ens, "caa", 2));
+    test_assert(ABR_ASSERT_OCCURENCES(ens, "pfff", 1));
+
+    test_assert(ens->max_str_len == 4);
+    test_assert(ens->len == 5);
+
+    // Ajout d'un mot NULL
+    test_assert(ABR_ajouter_mot(ens, NULL) == -1);
+
+    ABR_libere(ens);
     return 1;
 }

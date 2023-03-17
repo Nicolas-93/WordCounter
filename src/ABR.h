@@ -56,7 +56,7 @@ Mots* ABR_initialiser();
  * - 1 en cas de succès
  * - 0 si le mot existe déjà (incrémentation de
  * son nombre d'occurences)
- * - -1 en cas d'erreur d'allocation
+ * - -1 en cas d'erreur d'allocation, ou si le mot est NULL
  */
 int ABR_ajouter_mot(Mots* ens, char* mot);
 
