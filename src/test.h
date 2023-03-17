@@ -21,6 +21,16 @@
         } \
     } while (0)
 
+#define STRING_ARRAY_TO_ENS(array, ens) \
+    do { \
+        for (int i = 0; i < sizeof(array) / sizeof(array[0]); i++) { \
+            ABR_ajouter_mot(ens, array[i]); \
+        } \
+    } while (0)
+
+#define ABR_ASSERT_OCCURENCES(ens, mot, nb) \
+    (ABR_cherche_mot(ens, mot)->nb_occ == (nb))
+
 /**
  * @brief Lance tous les tests unitaires.
  * 
@@ -29,7 +39,7 @@
 int test();
 
 /* Les fonctions qui testent la fonctionnalité de celles du module mot */
-int test_mot_normaliser();
+int test_MOT_normaliser();
 
 
 /* tableau */
