@@ -62,13 +62,16 @@ void ABR_actualise_max_str_size(Mots* ens, int len) {
 }
 
 MotEntry* ABR_ajout_aux(MotEntry** a, char* mot, int apparition) {
+
     if (IS_EMPTY_TREE(*a)) {
         *a = ABR_alloue_noeud(mot, apparition);
         return *a;
     }
-    if (STR_EQUALS((*a)->mot, mot))
+
+    int cmp = strcmp(mot, (*a)->mot);
+    if (cmp == 0)
         return *a;
-    if (STR_LESS_THAN(mot, (*a)->mot))
+    if (cmp < 0)
         return ABR_ajout_aux(&LEFT_NODE(*a), mot, apparition);
     else
         return ABR_ajout_aux(&RIGHT_NODE(*a), mot, apparition);
