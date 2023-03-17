@@ -7,6 +7,7 @@
 #include <string.h>
 
 #define SEPARATORS " \n,;:.?!\\\"()-'’"
+#define MAX_WORD_SIZE 1024
 
 #define FOREACH_TOKEN(token, line) \
     for (token = strtok(line, SEPARATORS), MOT_normaliser(token); \
@@ -51,5 +52,7 @@ int ALG_mots_avant_x(Mots* dest, FILE* f, char* x);
  * @return int 
  */
 int ALG_compter_mots(Mots* dest, FILE* f);
+
+void ALG_expression(Mots* dest, const char* filename, int n);
 
 #endif

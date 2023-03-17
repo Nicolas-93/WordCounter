@@ -131,8 +131,8 @@ Mots* ARGS_execute_lecture(Parameters params) {
         ALG_mots_apres_x(mots, params.file, params.recherche.mot);
         break;
     case MODE_EXPRESSION:
-        fprintf(stderr, "Expressions pas encore implémentées.\n");
-        // ALG_expression(mots, params.file, params.recherche.len_expr);
+        // fprintf(stderr, "Expressions pas encore implémentées.\n");
+        ALG_expression(mots, params.filename, params.recherche.len_expr);
         break;
     default:
         break;
