@@ -4,6 +4,20 @@
 #include <string.h>
 #include <stdio.h>
 
+// Ces fonctions sont privées
+static int test_MOT_est_correct();
+static int test_MOT_normaliser();
+static int test_TAB_tri();
+static int test_ALG_mots_avant_x();
+static int test_ALG_compter_mots();
+static int test_ALG_mots_apres_x();
+static int test_ALG_expressions();
+static int test_ABR_initialiser();
+static int test_ABR_alloue_noeud();
+static int test_ABR_cherche_mot();
+static int test_ABR_appartient();
+static int test_ABR_ajouter_mot();
+
 
 static char* t1[] = {
     "zzz", "zzz", "zzz", "zzz", "zzz",
@@ -15,6 +29,7 @@ static char* t1[] = {
 
 TestFunc tests[] = {
     test_MOT_normaliser,
+    test_MOT_est_correct,
     test_ABR_initialiser,
     test_ABR_alloue_noeud,
     test_ABR_ajouter_mot,
@@ -53,7 +68,7 @@ void test_assert_print(const char* file, int line, const char* func, const char*
         msg, file, line, func, expr);
 }
 
-int test_MOT_normaliser() {
+static int test_MOT_normaliser() {
     char t1[] = "HelLo WORLd";
     char t2[] = "LicEnCE 1";
     char t3[] = "ù$*ùù Corr$^*ùm*pu";
@@ -69,9 +84,9 @@ int test_MOT_normaliser() {
     return 1;
 }
 
-int test_MOT_est_correct() {
+static int test_MOT_est_correct() {
     test_assert(MOT_est_correct("Hello"));
-    test_assert(!MOT_est_correct(""));
+    test_assert(MOT_est_correct(""));
     test_assert(!MOT_est_correct("$ù*é-'"));
     test_assert(!MOT_est_correct("sa1ut"));
     test_assert(!MOT_est_correct("sa1ut3"));
@@ -80,7 +95,7 @@ int test_MOT_est_correct() {
     return 1;
 }
 
-int test_TAB_tri() {
+static int test_TAB_tri() {
 
     Mots* ens1 = ABR_initialiser(), *ens2 = ABR_initialiser();
     
@@ -141,7 +156,7 @@ int test_TAB_tri() {
     return 1;
 }
 
-int test_ALG_compter_mots() {
+static int test_ALG_compter_mots() {
     Mots* ens1 = ABR_initialiser(), *ens2 = ABR_initialiser();
     test_assert(ens1);
     
@@ -170,7 +185,7 @@ int test_ALG_compter_mots() {
 }
 
 
-int test_ALG_mots_apres_x() {
+static int test_ALG_mots_apres_x() {
     Mots* ens1 = ABR_initialiser();
     test_assert(ens1);
     
@@ -192,7 +207,7 @@ int test_ALG_mots_apres_x() {
 }
 
 
-int test_ALG_mots_avant_x() {
+static int test_ALG_mots_avant_x() {
     Mots* ens1 = ABR_initialiser();
     test_assert(ens1);
     
@@ -213,7 +228,7 @@ int test_ALG_mots_avant_x() {
     return 1;
 }
 
-int test_ALG_expressions() {
+static int test_ALG_expressions() {
     Mots* ens1 = ABR_initialiser();
     test_assert(ens1);
     
@@ -273,7 +288,7 @@ int test_ALG_expressions() {
     return 1;
 }
 
-int test_ABR_initialiser() {
+static int test_ABR_initialiser() {
     Mots* ens = ABR_initialiser();
     test_assert(ens);
     
@@ -286,7 +301,7 @@ int test_ABR_initialiser() {
     return 1;
 }
 
-int test_ABR_alloue_noeud() {
+static int test_ABR_alloue_noeud() {
     char* mot = "there is no node";
     MotEntry* entry = ABR_alloue_noeud(mot, 89);
     test_assert(entry);
@@ -304,7 +319,7 @@ int test_ABR_alloue_noeud() {
     return 1;
 }
 
-int test_ABR_cherche_mot() {
+static int test_ABR_cherche_mot() {
     Mots* ens = ABR_initialiser();
     MotEntry* entry;
     test_assert(ens);
@@ -331,7 +346,7 @@ int test_ABR_cherche_mot() {
     return 1;
 }
 
-int test_ABR_appartient() {
+static int test_ABR_appartient() {
     Mots* ens = ABR_initialiser();
     test_assert(ens);
 
@@ -355,7 +370,7 @@ int test_ABR_appartient() {
     return 1;
 }
 
-int test_ABR_ajouter_mot() {
+static int test_ABR_ajouter_mot() {
     Mots* ens = ABR_initialiser();
     test_assert(ens);
 

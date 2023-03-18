@@ -16,6 +16,11 @@
 
 #define COLOR_STR(color, str) color str COLOR_R
 
+/**
+ * @brief Affiche le résultat d'une assertion
+ * mais ne quitte pas le programme.
+ * 
+ */
 #define test_assert(expr) \
     do { \
         int res = !!(expr); \
@@ -51,37 +56,5 @@ int test();
  * 
  */
 void test_assert_print(const char* file, int line, const char* func, const char* expr, int res) ;
-
-/* mot */
-int test_MOT_est_correct();
-
-int test_MOT_normaliser();
-
-/* tableau */
-int test_TAB_arbre_en_tab();
-
-int test_TAB_tri();
-
-/* algo */
-
-int test_ALG_mots_avant_x();
-
-int test_ALG_compter_mots();
-
-int test_ALG_mots_apres_x();
-
-int test_ALG_expressions();
-
-/* ABR */
-
-int test_ABR_initialiser();
-
-int test_ABR_alloue_noeud();
-
-int test_ABR_cherche_mot();
-
-int test_ABR_appartient();
-
-int test_ABR_ajouter_mot();
 
 #endif
