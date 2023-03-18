@@ -162,7 +162,10 @@ Mots* ARGS_execute_lecture(Parameters params) {
 TabMots* ARGS_execute_tri(const Mots* mots, Parameters params) {
     TabMots* tab;
     tab = TAB_arbre_en_tab(mots);
-    TAB_tri(tab, params.tri.mode, params.tri.croissant);
+
+    // Le tableau est déjà trié dans l'ordre lexicographique ascendant.
+    if (params.tri.mode != TRI_LEXICO || !params.tri.croissant)
+        TAB_tri(tab, params.tri.mode, params.tri.croissant);
 
     return tab;
 }
