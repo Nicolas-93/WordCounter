@@ -53,6 +53,6 @@ int ALG_mots_avant_x(Mots* dest, FILE* f, char* x);
  */
 int ALG_compter_mots(Mots* dest, FILE* f);
 
-void ALG_expression(Mots* dest, const char* filename, int n);
+void ALG_expression(Mots* dest, FILE* f, int n);
 
 #endif

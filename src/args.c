@@ -61,11 +61,12 @@ Parameters ARGS_parse(int argc, char* argv[]) {
 
         case 'e':
             params.mode = MODE_EXPRESSION;
-            if ((params.recherche.len_expr = atoi(optarg)) < 1) {
+            if ((params.recherche.len_expr = atoi(optarg)) < 2) {
                 fprintf(
                     stderr,
                     "Erreur: la longueur de l'expression "
                     "doit être supérieure ou égale à 1.\n");
+                exit(EXIT_FAILURE);
             }
             break;
 
@@ -131,8 +132,7 @@ Mots* ARGS_execute_lecture(Parameters params) {
         ALG_mots_apres_x(mots, params.file, params.recherche.mot);
         break;
     case MODE_EXPRESSION:
-        // fprintf(stderr, "Expressions pas encore implémentées.\n");
-        ALG_expression(mots, params.filename, params.recherche.len_expr);
+        ALG_expression(mots, params.file, params.recherche.len_expr);
         break;
     default:
         break;

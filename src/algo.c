@@ -85,23 +85,22 @@ int ALG_compter_mots(Mots* dest, FILE* f) {
     return 1;
 }
 
-void ALG_expression(Mots* dest, const char* filename, int n) {
-    FILE *file = fopen(filename, "r");
+void ALG_expression(Mots* dest, FILE* f, int n) {
 
-    char mot_courant[MAX_WORD_SIZE], suffix[(n-1)*MAX_WORD_SIZE];
-    char* token;
+    char mot_courant[MAX_WORD_SIZE] = {0}, suffix[(n-1)*MAX_WORD_SIZE];
+    char* token = NULL;
 
     memset(suffix, 0, (n-1)*MAX_WORD_SIZE);
 
-    for (int i = 0; i < n-1; i++) {
-        fscanf(file, "%s", mot_courant);
-        strcat(suffix, mot_courant);
-        strcat(suffix, " ");
-    }
+    int i = 0;
+    while (fscanf(f, "%s ", mot_courant) != EOF) {
+        token = strtok(mot_courant, SEPARATORS);
+        MOT_normaliser(token);
 
-    while (fscanf(file, "%s ", mot_courant) != EOF) {
-        strcat(suffix, mot_courant);
+        if (!MOT_est_correct(token)) continue;
+        strcat(suffix, token);
         strcat(suffix, " ");
+        if (i++ < n - 1) continue;
 
         ABR_ajouter_mot(dest, suffix);
         token = strtok(suffix, " ");
@@ -110,6 +109,4 @@ void ALG_expression(Mots* dest, const char* filename, int n) {
             suffix + strlen(token) + 1,
             (n-1)*MAX_WORD_SIZE - strlen(token) - 1);
     }
-
-    fclose(file);
 }
