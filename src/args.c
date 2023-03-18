@@ -18,22 +18,27 @@ Parameters ARGS_parse(int argc, char* argv[]) {
         .file = NULL,
         .test_unitaire = false,
     };
-    
+
+    int force_ordre_tri = -1;
+
     static struct option long_options[] = {
         {"help", no_argument, 0, 'h'},
-        {"test", no_argument, 0, 't'},
+        {"apparition", no_argument, 0, 'f'},
         {"lexico", no_argument, 0, 'a'},
         {"occ", no_argument, 0, 'n'},
+        {"croissant", no_argument, 0, 'c'},
+        {"decroissant", no_argument, 0, 'd'},
         {"avant", required_argument, 0, 'p'},
         {"apres", required_argument, 0, 's'},
         {"expr", required_argument, 0, 'e'},
+        {"test", no_argument, 0, 't'},
         {0, 0, 0, 0},
     };
 
     int opt;
     int option_index = 0;
 
-    while ((opt = getopt_long_only(argc, argv, "hanp:s:e:", long_options, &option_index)) != EOF) {
+    while ((opt = getopt_long_only(argc, argv, "hanfcdtp:s:e:", long_options, &option_index)) != EOF) {
         switch (opt) {
         case 'a':
             params.tri.mode = TRI_LEXICO;
@@ -42,6 +47,17 @@ Parameters ARGS_parse(int argc, char* argv[]) {
         case 'n':
             params.tri.mode = TRI_NB_OCCURENCES;
             params.tri.croissant = false;
+            break;
+        case 'f':
+            params.tri.mode = TRI_APPARITION;
+            params.tri.croissant = true;
+            break;
+        
+        case 'c':
+            force_ordre_tri = true;
+            break;
+        case 'd':
+            force_ordre_tri = false;
             break;
 
         case 'p':
@@ -62,7 +78,7 @@ Parameters ARGS_parse(int argc, char* argv[]) {
                 fprintf(
                     stderr,
                     "Erreur: la longueur de l'expression "
-                    "doit être supérieure ou égale à 1.\n");
+                    "doit être un entier supérieur ou égal à 2.\n");
                 exit(EXIT_FAILURE);
             }
             break;
@@ -76,6 +92,9 @@ Parameters ARGS_parse(int argc, char* argv[]) {
             break;
         }
     }
+
+    if (force_ordre_tri != -1)
+        params.tri.croissant = force_ordre_tri;
 
     if (params.test_unitaire)
         exit(!test());
@@ -94,7 +113,6 @@ Parameters ARGS_parse(int argc, char* argv[]) {
         }
     }
 
-
     return params;
 }
 
@@ -103,8 +121,11 @@ void ARGS_print_help(char* progname) {
         "Usage : %s [OPTION]... [FICHIER]\n"
         "Options:\n"
         "  -h, --help\t\tAffiche ce message d'aide.\n"
+        "  -f, --apparition\tTrie les mots par ordre d'apparition dans le texte. (Défaut)\n"
         "  -a, --lexico\t\tTrie les mots par ordre lexicographique croissant.\n"
         "  -n, --occ\t\tTrie les mots par nombre d'occurences décroissant, puis par ordre lexicographique.\n"
+        "  -c, --croissant\tForce le tri par ordre croissant.\n"
+        "  -d, --decroissant\tForce le tri par ordre décroissant.\n"
         "  -p, --avant=MOT\tAffiche les mots avant le mot MOT.\n"
         "  -s, --apres=MOT\tAffiche les mots après le mot MOT.\n"
         "  -e, --expr=N\t\tAffiche les expressions de longueur N mots.\n"
