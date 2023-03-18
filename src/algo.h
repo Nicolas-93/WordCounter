@@ -14,6 +14,11 @@
          token;                                                   \
          token = strtok(NULL, SEPARATORS), MOT_normaliser(token))
 
+#define FOREACH_TOKEN_SAFE(token, line, saveptr) \
+    for (token = strtok_r(line, SEPARATORS, (saveptr)), MOT_normaliser(token); \
+         token;                                                                   \
+         token = strtok_r(NULL, SEPARATORS, (saveptr)), MOT_normaliser(token))
+
 typedef enum ModeRecherche {
     MODE_COMPTER_MOTS = 0,
     MODE_MOTS_AVANT_X = 1,
@@ -53,6 +58,13 @@ int ALG_mots_avant_x(Mots* dest, FILE* f, char* x);
  */
 int ALG_compter_mots(Mots* dest, FILE* f);
 
-void ALG_expression(Mots* dest, FILE* f, int n);
+/**
+ * @brief Compte les expressions de n mots.
+ * 
+ * @param dest 
+ * @param f 
+ * @param n 
+ */
+void ALG_expressions(Mots* dest, FILE* f, int n);
 
 #endif

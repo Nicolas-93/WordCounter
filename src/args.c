@@ -132,7 +132,7 @@ Mots* ARGS_execute_lecture(Parameters params) {
         ALG_mots_apres_x(mots, params.file, params.recherche.mot);
         break;
     case MODE_EXPRESSION:
-        ALG_expression(mots, params.file, params.recherche.len_expr);
+        ALG_expressions(mots, params.file, params.recherche.len_expr);
         break;
     default:
         break;
