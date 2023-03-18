@@ -24,6 +24,7 @@ TestFunc tests[] = {
     test_TAB_tri,
     test_ALG_mots_avant_x,
     test_ALG_mots_apres_x,
+    test_ALG_expressions,
 };
 
 int test() {
@@ -209,6 +210,66 @@ int test_ALG_mots_avant_x() {
     test_assert(ABR_cherche_mot(ens1, "abc") == NULL);
 
     ABR_libere(ens1);
+    return 1;
+}
+
+int test_ALG_expressions() {
+    Mots* ens1 = ABR_initialiser();
+    test_assert(ens1);
+    
+    FILE* f1 = fopen("textes/sujet_exprs.txt", "r");
+    test_assert(f1);
+
+    ALG_expressions(ens1, f1, 2);
+    fclose(f1);
+
+    // Vérification des occurences
+    test_assert(ABR_ASSERT_OCCURENCES(ens1, "un un", 3));
+    test_assert(ABR_ASSERT_OCCURENCES(ens1, "un deux", 1));
+    test_assert(ABR_ASSERT_OCCURENCES(ens1, "deux trois", 2));
+    test_assert(ABR_ASSERT_OCCURENCES(ens1, "trois trois", 1));
+    test_assert(ABR_ASSERT_OCCURENCES(ens1, "trois un", 1));
+    test_assert(ABR_ASSERT_OCCURENCES(ens1, "un trois", 1));
+    test_assert(ABR_ASSERT_OCCURENCES(ens1, "trois deux", 1));
+    
+    TabMots* tab1 = TAB_arbre_en_tab(ens1);
+    
+    // Vérification de l'ordre d'apparition
+    TAB_tri(tab1, TRI_APPARITION, true);
+    test_assert(STR_EQUALS(tab1->tab[0]->mot, "un un"));
+    test_assert(STR_EQUALS(tab1->tab[1]->mot, "un deux"));
+    test_assert(STR_EQUALS(tab1->tab[2]->mot, "deux trois"));
+    test_assert(STR_EQUALS(tab1->tab[3]->mot, "trois trois"));
+    test_assert(STR_EQUALS(tab1->tab[4]->mot, "trois un"));
+    test_assert(STR_EQUALS(tab1->tab[5]->mot, "un trois"));
+    test_assert(STR_EQUALS(tab1->tab[6]->mot, "trois deux"));
+
+    
+    Mots* ens2 = ABR_initialiser();
+    FILE* f2 = fopen("textes/brassens.txt", "r");
+    test_assert(f2);
+
+    ALG_expressions(ens2, f2, 3);
+    fclose(f2);
+
+    // Vérification des occurences
+    test_assert(ABR_ASSERT_OCCURENCES(ens2, "de mon arbre", 2));
+    test_assert(ABR_ASSERT_OCCURENCES(ens2, "heureux j aurais", 1));
+    test_assert(ABR_ASSERT_OCCURENCES(ens2, "eloigner de mon", 1));
+
+    TabMots* tab2 = TAB_arbre_en_tab(ens2);
+
+    // Vérification de l'ordre d'apparition
+    TAB_tri(tab2, TRI_APPARITION, true);
+    test_assert(STR_EQUALS(tab2->tab[0]->mot, "aupres de mon"));
+    test_assert(STR_EQUALS(tab2->tab[1]->mot, "de mon arbre"));
+    test_assert(STR_EQUALS(tab2->tab[12]->mot, "eloigner de mon"));
+
+    ABR_libere(ens1);
+    ABR_libere(ens2);
+    TAB_libere(tab1);
+    TAB_libere(tab2);
+
     return 1;
 }
 

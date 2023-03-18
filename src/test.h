@@ -70,6 +70,8 @@ int test_ALG_compter_mots();
 
 int test_ALG_mots_apres_x();
 
+int test_ALG_expressions();
+
 /* ABR */
 
 int test_ABR_initialiser();
