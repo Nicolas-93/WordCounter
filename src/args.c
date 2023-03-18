@@ -10,7 +10,6 @@ Parameters ARGS_parse(int argc, char* argv[]) {
         .tri = {
             .mode = TRI_APPARITION,
             .croissant = true,
-            .func = TAB_compare_tri_apparition_croissant,
         },
         .recherche = {
             .mot = NULL,
@@ -39,12 +38,10 @@ Parameters ARGS_parse(int argc, char* argv[]) {
         case 'a':
             params.tri.mode = TRI_LEXICO;
             params.tri.croissant = true;
-            params.tri.func = TAB_compare_tri_lexico_croissant;
             break;
         case 'n':
             params.tri.mode = TRI_NB_OCCURENCES;
             params.tri.croissant = false;
-            params.tri.func = TAB_compare_tri_occ_decroissant;
             break;
 
         case 'p':

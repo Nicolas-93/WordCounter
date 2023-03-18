@@ -13,7 +13,6 @@ typedef struct Parameters {
     struct {
         ModeTri mode;
         bool croissant;
-        TriFunc func;
     } tri;
 
     ModeRecherche mode;
