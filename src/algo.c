@@ -85,21 +85,24 @@ int ALG_compter_mots(Mots* dest, FILE* f) {
     return 1;
 }
 
-void ALG_expressions(Mots* dest, FILE* f, int n) {
-    char chaine[MAX_WORD_SIZE];
-    char expr[(n - 1) * MAX_WORD_SIZE];
+int ALG_expressions(Mots* dest, FILE* f, int n) {
+    char* ligne = NULL;
+    char expr[n * MAX_WORD_SIZE];
 
     int len_token;
     char* token;
     char* chaine_token;
     char* chaine_saveptr;
 
-    memset(expr, 0, (n - 1) * MAX_WORD_SIZE);
+    size_t len_buf = 0;
+    ssize_t len_ligne;
+
+    memset(expr, 0, (n * MAX_WORD_SIZE) * sizeof(char));
 
     int i = 0;
 
-    while (fscanf(f, "%s ", chaine) != EOF) {
-        FOREACH_TOKEN_SAFE(chaine_token, chaine, &chaine_saveptr) {
+    while ((len_ligne = getline(&ligne, &len_buf, f)) != EOF) {
+        FOREACH_TOKEN_SAFE(chaine_token, ligne, &chaine_saveptr) {
             if (!MOT_est_correct(chaine_token)) continue;
             strcat(expr, chaine_token);
 
@@ -121,4 +124,7 @@ void ALG_expressions(Mots* dest, FILE* f, int n) {
                 (n - 1) * MAX_WORD_SIZE - len_token + 1);
         }
     }
+
+    free(ligne);
+    return 1;
 }

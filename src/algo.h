@@ -64,7 +64,8 @@ int ALG_compter_mots(Mots* dest, FILE* f);
  * @param dest 
  * @param f 
  * @param n 
+ * @return int 
  */
-void ALG_expressions(Mots* dest, FILE* f, int n);
+int ALG_expressions(Mots* dest, FILE* f, int n);
 
 #endif
