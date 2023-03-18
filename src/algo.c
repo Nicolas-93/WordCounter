@@ -87,33 +87,38 @@ int ALG_compter_mots(Mots* dest, FILE* f) {
 
 void ALG_expressions(Mots* dest, FILE* f, int n) {
     char chaine[MAX_WORD_SIZE];
-    char suffix[(n-1)*MAX_WORD_SIZE];
-    
+    char expr[(n - 1) * MAX_WORD_SIZE];
+
+    int len_token;
     char* token;
     char* chaine_token;
     char* chaine_saveptr;
 
-    memset(suffix, 0, (n-1)*MAX_WORD_SIZE);
+    memset(expr, 0, (n - 1) * MAX_WORD_SIZE);
 
     int i = 0;
 
     while (fscanf(f, "%s ", chaine) != EOF) {
         FOREACH_TOKEN_SAFE(chaine_token, chaine, &chaine_saveptr) {
-
             if (!MOT_est_correct(chaine_token)) continue;
+            strcat(expr, chaine_token);
 
-            strcat(suffix, chaine_token);
-            strcat(suffix, " ");
+            // On doit initaliser le tableau d'une première expression à n mots
+            if (i++ < n - 1) {
+                strcat(expr, " ");
+                continue;
+            }
 
-            // On doit initaliser le tableau d'une première expression
-            if (i++ < n - 1) continue;
+            ABR_ajouter_mot(dest, expr);
+            strcat(expr, " ");
 
-            ABR_ajouter_mot(dest, suffix);
-            token = strtok(suffix, " ");
+            token = strtok(expr, " ");
+            len_token = strlen(token);
+
             memmove(
-                suffix,
-                suffix + strlen(token) + 1,
-                (n-1)*MAX_WORD_SIZE - strlen(token) + 1);
+                expr,
+                expr + len_token + 1,
+                (n - 1) * MAX_WORD_SIZE - len_token + 1);
         }
     }
 }
