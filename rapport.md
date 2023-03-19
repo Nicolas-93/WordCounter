@@ -42,7 +42,7 @@ header-includes:
 ## Exercice 2
 
 Nous avons écrit un module `test`, nous permettant de tester les 
-fonctions indispensable de notre travail.
+fonctions indispensables de notre travail.
 
 
 - `test_assert_print()` permet de tester le résultat d'une assertion
