@@ -104,7 +104,7 @@ Enfin comme demandé dans l'énoncé, nous avons déclaré en ``static`` les fon
 
 Au premier abord, nous avions utilisé un tableau dynamique pour gérer l'ensemble, cependant après considération de la complexité (recherche en $O(n)$) nous avons changé pour une structure d'arbre afin d'améliorer les performances du programme (recherche en moyenne en complexité logarithmique).
 
-Pour cela nous avons ajouté aux nœuds deux attributs supplémentaires : ``nb_occ`` et ``apparition``. Le premier permet de compter le nombre d'occurrences d'un mot (s'il existe déjà, nous seulement incrémentons cette valeur, sans nouvelles allocations), et le second permet de garder l'ordre d'apparition des mots dans le texte (à chaque ajout d'un nouveau nœud (mot), nous le numérotons avec la taille de l'arbre).
+Pour cela nous avons ajouté aux nœuds deux attributs supplémentaires : ``nb_occ`` et ``apparition``. Le premier permet de compter le nombre d'occurrences d'un mot (s'il existe déjà, nous incrémentons seulement cette valeur, sans nouvelles allocations), et le second permet de garder l'ordre d'apparition des mots dans le texte (à chaque ajout d'un nouveau nœud (mot), nous le numérotons avec la taille de l'arbre).
 
 On ainsi les performances suivantes :
 
