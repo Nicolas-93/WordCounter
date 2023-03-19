@@ -41,9 +41,28 @@ header-includes:
 
 ## Exercice 2
 
-## Exercice 3
+Nous avons écrit un module `test`, nous permettant de tester les 
+fonctions indispensable de notre travail.
 
-## Exercice 4
+
+- `test_assert_print()` permet de tester le résultat d'une assertion
+
+- `test_MOT_est_correct()` pour tester la fonction `MOT_est_correct`. Cette dernière ayant pour but de vérifier 
+si un mot est corrrect dans le cadre du TP, par exemple un mot qui
+comporte des chiffres n'est pas considéré correct.
+
+- `test_MOT_normaliser` pour tester la fonction `MOT_normaliser`, cette dernière étant une petite fonction mettant toutes les lettres d'un mot, en minuscule, en utilisant la fonction `tolower()` du module `ctype.h`.
+
+- `test_TAB_arbre_en_tab()` pour tester la fonction `TAB_arbre_en_tab`. Cette fonction, située dans le module `tableau`, nous permet d'écrire l'arbre lexicographique, sous forme d'un tableau.
+
+- `test_TAB_tri()` pour tester `TAB_tri` dans le module `tableau`.
+- `test_ALG_mots_avant_x()`, `test_ALG_mots_apres_x()`, pour tester repectivement les fonctions `ALG_mots_avant_x()` et `ALG_mots_apres_x()`, étant situées dans le module `algo`.
+
+- `test_ALG_compter_mots()` pour tester `ALG_compter_mots()`, cette dernière ayant pour but de compter le nombre d'expressions de n mots.
+
+- `test_ALG_expressions()` pour tester la fonction `ALG_expressions()`, cette dernière ayant pour objectif de compter le nombre d'expression de n mots adjacent dans un texte.
+
+- Les fonctions `test_ABR_initialiser()`, `test_ABR_alloue_noeud()`, `test_ABR_cherche_mot()`, `test_ABR_appartient()` et `test_ABR_ajouter_mot()` pour tester les fonction correspodantes, qui sont les fonctions usuelles du traitement des arbres, respectivement pour initialiser, allouer un noeud, chercher un mot, teste d'appartenance et ajout d'un mot dans un arbre.
 
 # Remarques
 
