@@ -106,7 +106,7 @@ Au premier abord, nous avions utilisé un tableau dynamique pour gérer l'ensemb
 
 Pour cela nous avons ajouté aux nœuds deux attributs supplémentaires : ``nb_occ`` et ``apparition``. Le premier permet de compter le nombre d'occurrences d'un mot (s'il existe déjà, nous incrémentons seulement cette valeur, sans nouvelles allocations), et le second permet de garder l'ordre d'apparition des mots dans le texte (à chaque ajout d'un nouveau nœud (mot), nous le numérotons avec la taille de l'arbre).
 
-On ainsi les performances suivantes :
+On a ainsi les performances suivantes :
 
 - Ajout : $log(n)$
 - Test d'appartenance : $log(n)$
