@@ -1,84 +1,84 @@
 #include <getopt.h>
 #include "args.h"
 #include "algo.h"
-#include "tableau.h"
+#include "wordarray.h"
 #include "test.h"
 
-Parameters ARGS_parse(int argc, char* argv[]) {
-    Parameters params = {
-        .mode = MODE_COMPTER_MOTS,
+Args ARGS_parse(int argc, char* argv[]) {
+    Args params = {
+        .mode = MODE_COUNT_WORDS,
         .tri = {
-            .mode = TRI_APPARITION,
-            .croissant = true,
+            .mode = SORT_APPARITION,
+            .ascending = true,
         },
-        .recherche = {
-            .mot = NULL,
+        .search = {
+            .word = NULL,
             .len_expr = 0,
         },
         .file = NULL,
-        .test_unitaire = false,
+        .unittest = false,
     };
 
-    int force_ordre_tri = -1;
+    int force_sort_order = -1;
 
     static struct option long_options[] = {
-        {"help", no_argument, 0, 'h'},
-        {"apparition", no_argument, 0, 'f'},
-        {"lexico", no_argument, 0, 'a'},
-        {"occ", no_argument, 0, 'n'},
-        {"croissant", no_argument, 0, 'c'},
-        {"decroissant", no_argument, 0, 'd'},
-        {"avant", required_argument, 0, 'p'},
-        {"apres", required_argument, 0, 's'},
-        {"expr", required_argument, 0, 'e'},
-        {"test", no_argument, 0, 't'},
+        {"help",        no_argument,        0, 'h'},
+        {"apparition",  no_argument,        0, 'f'},
+        {"lexico",      no_argument,        0, 'l'},
+        {"occ",         no_argument,        0, 'n'},
+        {"ascending",   no_argument,        0, 'u'},
+        {"descending",  no_argument,        0, 'd'},
+        {"test",        no_argument,        0, 't'},
+        {"before",      required_argument,  0, 'b'},
+        {"after",       required_argument,  0, 'a'},
+        {"expr",        required_argument,  0, 'e'},
         {0, 0, 0, 0},
     };
 
     int opt;
     int option_index = 0;
 
-    while ((opt = getopt_long_only(argc, argv, "hanfcdtp:s:e:", long_options, &option_index)) != EOF) {
+    while ((opt = getopt_long_only(argc, argv, "hflnudtb:a:e:", long_options, &option_index)) != EOF) {
         switch (opt) {
-        case 'a':
-            params.tri.mode = TRI_LEXICO;
-            params.tri.croissant = true;
+        case 'l':
+            params.tri.mode = SORT_LEXICO;
+            params.tri.ascending = true;
             break;
         case 'n':
-            params.tri.mode = TRI_NB_OCCURENCES;
-            params.tri.croissant = false;
+            params.tri.mode = SORT_NB_OCCURENCES;
+            params.tri.ascending = false;
             break;
         case 'f':
-            params.tri.mode = TRI_APPARITION;
-            params.tri.croissant = true;
+            params.tri.mode = SORT_APPARITION;
+            params.tri.ascending = true;
             break;
         
         case 'c':
-            force_ordre_tri = true;
+            force_sort_order = true;
             break;
         case 'd':
-            force_ordre_tri = false;
+            force_sort_order = false;
             break;
 
-        case 'p':
-            params.mode = MODE_MOTS_AVANT_X;
-            params.recherche.mot = optarg;
+        case 'b':
+            params.mode = MODE_WORDS_BEFORE_X;
+            params.search.word = optarg;
             break;
-        case 's':
-            params.mode = MODE_MOTS_APRES_X;
-            params.recherche.mot = optarg;
+        case 'a':
+            params.mode = MODE_WORDS_AFTER_X;
+            params.search.word = optarg;
             break;
         case 't':
-            params.test_unitaire = true;
+            params.unittest = true;
             break;
 
         case 'e':
             params.mode = MODE_EXPRESSION;
-            if ((params.recherche.len_expr = atoi(optarg)) < 2) {
+            if ((params.search.len_expr = atoi(optarg)) < 2) {
                 fprintf(
                     stderr,
-                    "Erreur: la longueur de l'expression "
-                    "doit être un entier supérieur ou égal à 2.\n");
+                    "Error: the length of the expression "
+                    "must be an integer greater than or equal to 2.\n");
                 exit(EXIT_FAILURE);
             }
             break;
@@ -93,14 +93,14 @@ Parameters ARGS_parse(int argc, char* argv[]) {
         }
     }
 
-    if (force_ordre_tri != -1)
-        params.tri.croissant = force_ordre_tri;
+    if (force_sort_order != -1)
+        params.tri.ascending = force_sort_order;
 
-    if (params.test_unitaire)
+    if (params.unittest)
         exit(!test());
 
     if (optind == argc) {
-        fprintf(stderr, "Erreur: aucun fichier spécifié.\n");
+        fprintf(stderr, "Error : no file specified\n");
         exit(EXIT_FAILURE);
     }
 
@@ -108,7 +108,7 @@ Parameters ARGS_parse(int argc, char* argv[]) {
         params.filename = argv[optind];
 
         if (!(params.file = fopen(params.filename, "r"))) {
-            perror("Erreur d'ouverture de fichier :");
+            perror("Error while opening file:");
             exit(EXIT_FAILURE);
         }
     }
@@ -118,39 +118,38 @@ Parameters ARGS_parse(int argc, char* argv[]) {
 
 void ARGS_print_help(char* progname) {
     printf(
-        "Usage : %s [OPTION]... [FICHIER]\n"
+        "Usage : %s [OPTION]... [FILE]\n"
         "Options:\n"
-        "  -h, --help\t\tAffiche ce message d'aide.\n"
-        "  -f, --apparition\tTrie les mots par ordre d'apparition dans le texte. (Défaut)\n"
-        "  -a, --lexico\t\tTrie les mots par ordre lexicographique croissant.\n"
-        "  -n, --occ\t\tTrie les mots par nombre d'occurences décroissant, puis par ordre lexicographique.\n"
-        "  -c, --croissant\tForce le tri par ordre croissant.\n"
-        "  -d, --decroissant\tForce le tri par ordre décroissant.\n"
-        "  -p, --avant=MOT\tAffiche les mots avant le mot MOT.\n"
-        "  -s, --apres=MOT\tAffiche les mots après le mot MOT.\n"
-        "  -e, --expr=N\t\tAffiche les expressions de longueur N mots.\n"
-        "  -test\t\t\tExécute les tests unitaires.\n",
-        progname);   
+        "  -h, --help\t\tDisplay this help message.\n"
+        "  -f, --apparition\tSort words by order of appearance in the text. (Default)\n"
+        "  -l, --lexico\t\tSort words by ascending lexicographic order.\n"
+        "  -n, --occ\t\tSort words by decreasing number of occurrences, then by lexicographic order.\n"
+        "  -c, --croissant\tForce ascending order.\n"
+        "  -d, --decroissant\tForce descending order.\n"
+        "  -b, --before=WORD\tDisplay the words before the word WORD.\n"
+        "  -a, --after=WORD\tDisplay the words after the word WORD.\n"
+        "  -e, --expr=N\t\tDisplay expressions of length N words.\n"
+        "  -t, --test\t\tRun unit tests.\n",
+        progname);
 }
 
-Mots* ARGS_execute_lecture(Parameters params) {
+WordTree* ARGS_readfile(Args params) {
 
-    Mots* mots = NULL;
-    mots = ABR_initialiser();
-    // mots->racine = NULL;
+    WordTree* mots = NULL;
+    mots = Tree_new();
 
     switch (params.mode) {
-    case MODE_COMPTER_MOTS:
-        ALG_compter_mots(mots, params.file);
+    case MODE_COUNT_WORDS:
+        ALG_count_words(mots, params.file);
         break;
-    case MODE_MOTS_AVANT_X:
-        ALG_mots_avant_x(mots, params.file, params.recherche.mot);
+    case MODE_WORDS_BEFORE_X:
+        ALG_words_before_x(mots, params.file, params.search.word);
         break;
-    case MODE_MOTS_APRES_X:
-        ALG_mots_apres_x(mots, params.file, params.recherche.mot);
+    case MODE_WORDS_AFTER_X:
+        ALG_words_after_x(mots, params.file, params.search.word);
         break;
     case MODE_EXPRESSION:
-        ALG_expressions(mots, params.file, params.recherche.len_expr);
+        ALG_expressions(mots, params.file, params.search.len_expr);
         break;
     default:
         break;
@@ -159,13 +158,13 @@ Mots* ARGS_execute_lecture(Parameters params) {
     return mots;
 }
 
-TabMots* ARGS_execute_tri(const Mots* mots, Parameters params) {
-    TabMots* tab;
-    tab = TAB_arbre_en_tab(mots);
+WordArray* ARGS_sort(const WordTree* mots, Args params) {
+    WordArray* tab;
+    tab = WordArray_from_WordTree(mots);
 
-    // Le tableau est déjà trié dans l'ordre lexicographique ascendant.
-    if (params.tri.mode != TRI_LEXICO || !params.tri.croissant)
-        TAB_tri(tab, params.tri.mode, params.tri.croissant);
+    // The array is already sorted in ascending lexicographic order.
+    if (params.tri.mode != SORT_LEXICO || !params.tri.ascending)
+        WordArray_sort(tab, params.tri.mode, params.tri.ascending);
 
     return tab;
 }

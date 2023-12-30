@@ -1,21 +1,20 @@
 #include "test.h"
-#include "tableau.h"
-#include "ABR.h"
+#include "wordarray.h"
+#include "tree.h"
 #include <string.h>
 #include <stdio.h>
 
-// Ces fonctions sont privées
-static int test_MOT_est_correct();
-static int test_MOT_normaliser();
-static int test_TAB_tri();
-static int test_ALG_mots_avant_x();
-static int test_ALG_compter_mots();
-static int test_ALG_mots_apres_x();
+static int test_Word_is_correct();
+static int test_Word_to_lower();
+static int test_WordArray_sort();
+static int test_ALG_words_before_x();
+static int test_ALG_count_words();
+static int test_ALG_words_after_x();
 static int test_ALG_expressions();
-static int test_ABR_initialiser();
-static int test_ABR_alloue_noeud();
-static int test_ABR_cherche_mot();
-static int test_ABR_appartient();
+static int test_Tree_new();
+static int test_Tree_new_node();
+static int test_Tree_search_word();
+static int test_Tree_in();
 static int test_ABR_ajouter_mot();
 
 
@@ -28,17 +27,17 @@ static char* t1[] = {
 };
 
 TestFunc tests[] = {
-    test_MOT_normaliser,
-    test_MOT_est_correct,
-    test_ABR_initialiser,
-    test_ABR_alloue_noeud,
+    test_Word_to_lower,
+    test_Word_is_correct,
+    test_Tree_new,
+    test_Tree_new_node,
     test_ABR_ajouter_mot,
-    test_ABR_cherche_mot,
-    test_ABR_appartient,
-    test_ALG_compter_mots,
-    test_TAB_tri,
-    test_ALG_mots_avant_x,
-    test_ALG_mots_apres_x,
+    test_Tree_search_word,
+    test_Tree_in,
+    test_ALG_count_words,
+    test_WordArray_sort,
+    test_ALG_words_before_x,
+    test_ALG_words_after_x,
     test_ALG_expressions,
 };
 
@@ -68,14 +67,14 @@ void test_assert_print(const char* file, int line, const char* func, const char*
         msg, file, line, func, expr);
 }
 
-static int test_MOT_normaliser() {
+static int test_Word_to_lower() {
     char t1[] = "HelLo WORLd";
     char t2[] = "LicEnCE 1";
     char t3[] = "ù$*ùù Corr$^*ùm*pu";
     
-    MOT_normaliser(t1);
-    MOT_normaliser(t2);
-    MOT_normaliser(t3);
+    Word_to_lower(t1);
+    Word_to_lower(t2);
+    Word_to_lower(t3);
 
     test_assert(STR_EQUALS(t1, "hello world"));
     test_assert(STR_EQUALS(t2, "licence 1"));
@@ -84,88 +83,88 @@ static int test_MOT_normaliser() {
     return 1;
 }
 
-static int test_MOT_est_correct() {
-    test_assert(MOT_est_correct("Hello"));
-    test_assert(MOT_est_correct(""));
-    test_assert(!MOT_est_correct("$ù*é-'"));
-    test_assert(!MOT_est_correct("sa1ut"));
-    test_assert(!MOT_est_correct("sa1ut3"));
-    test_assert(!MOT_est_correct("5a1ut"));
+static int test_Word_is_correct() {
+    test_assert(Word_is_correct("Hello"));
+    test_assert(Word_is_correct(""));
+    test_assert(!Word_is_correct("$ù*é-'"));
+    test_assert(!Word_is_correct("sa1ut"));
+    test_assert(!Word_is_correct("sa1ut3"));
+    test_assert(!Word_is_correct("5a1ut"));
 
     return 1;
 }
 
-static int test_TAB_tri() {
+static int test_WordArray_sort() {
 
-    Mots* ens1 = ABR_initialiser(), *ens2 = ABR_initialiser();
+    WordTree* ens1 = Tree_new(), *ens2 = Tree_new();
     
     // Test 1 : Avec le tableau t1 //
 
     STRING_ARRAY_TO_ENS(t1, ens1);
-    TabMots* tab1 = TAB_arbre_en_tab(ens1);
+    WordArray* tab1 = WordArray_from_WordTree(ens1);
 
     // l'arbre est sensé être déja trié lexicographiquement
-    test_assert(STR_EQUALS(tab1->tab[0]->mot, "aaa"));
-    test_assert(STR_EQUALS(tab1->tab[4]->mot, "zzz"));
+    test_assert(STR_EQUALS(tab1->tab[0]->word, "aaa"));
+    test_assert(STR_EQUALS(tab1->tab[4]->word, "zzz"));
     
-    TAB_tri(tab1, TRI_LEXICO, false);
-    test_assert(STR_EQUALS(tab1->tab[0]->mot, "zzz"));
-    test_assert(STR_EQUALS(tab1->tab[4]->mot, "aaa"));
+    WordArray_sort(tab1, SORT_LEXICO, false);
+    test_assert(STR_EQUALS(tab1->tab[0]->word, "zzz"));
+    test_assert(STR_EQUALS(tab1->tab[4]->word, "aaa"));
     
-    TAB_tri(tab1, TRI_APPARITION, true);
-    test_assert(STR_EQUALS(tab1->tab[0]->mot, "zzz"));
-    test_assert(STR_EQUALS(tab1->tab[4]->mot, "pfff"));
+    WordArray_sort(tab1, SORT_APPARITION, true);
+    test_assert(STR_EQUALS(tab1->tab[0]->word, "zzz"));
+    test_assert(STR_EQUALS(tab1->tab[4]->word, "pfff"));
     
-    TAB_tri(tab1, TRI_NB_OCCURENCES, false);
-    test_assert(STR_EQUALS(tab1->tab[0]->mot, "zzz"));
-    test_assert(STR_EQUALS(tab1->tab[4]->mot, "pfff"));
+    WordArray_sort(tab1, SORT_NB_OCCURENCES, false);
+    test_assert(STR_EQUALS(tab1->tab[0]->word, "zzz"));
+    test_assert(STR_EQUALS(tab1->tab[4]->word, "pfff"));
 
     // Test 2 : Avec le texte sujet_test_ordre.txt //
 
     FILE* f1 = fopen("textes/sujet_test_ordre.txt", "r");
     test_assert(f1);
 
-    ALG_compter_mots(ens2, f1);
-    TabMots* tab2 = TAB_arbre_en_tab(ens2);
+    ALG_count_words(ens2, f1);
+    WordArray* tab2 = WordArray_from_WordTree(ens2);
     fclose(f1);
 
     // l'arbre est sensé être déja trié lexicographiquement
-    test_assert(STR_EQUALS(tab2->tab[0]->mot, "deux"));
-    test_assert(STR_EQUALS(tab2->tab[1]->mot, "deuxdeux"));
-    test_assert(STR_EQUALS(tab2->tab[3]->mot, "un"));
+    test_assert(STR_EQUALS(tab2->tab[0]->word, "deux"));
+    test_assert(STR_EQUALS(tab2->tab[1]->word, "deuxdeux"));
+    test_assert(STR_EQUALS(tab2->tab[3]->word, "un"));
     
-    TAB_tri(tab2, TRI_APPARITION, true);
-    test_assert(STR_EQUALS(tab2->tab[0]->mot, "trois"));
-    test_assert(STR_EQUALS(tab2->tab[3]->mot, "deuxdeux"));
+    WordArray_sort(tab2, SORT_APPARITION, true);
+    test_assert(STR_EQUALS(tab2->tab[0]->word, "trois"));
+    test_assert(STR_EQUALS(tab2->tab[3]->word, "deuxdeux"));
     
-    TAB_tri(tab2, TRI_NB_OCCURENCES, false);
-    test_assert(STR_EQUALS(tab2->tab[0]->mot, "deux"));
-    test_assert(STR_EQUALS(tab2->tab[3]->mot, "trois"));
+    WordArray_sort(tab2, SORT_NB_OCCURENCES, false);
+    test_assert(STR_EQUALS(tab2->tab[0]->word, "deux"));
+    test_assert(STR_EQUALS(tab2->tab[3]->word, "trois"));
 
     // Retrions lexicographiquement
-    TAB_tri(tab2, TRI_LEXICO, true);
-    test_assert(STR_EQUALS(tab2->tab[0]->mot, "deux"));
-    test_assert(STR_EQUALS(tab2->tab[1]->mot, "deuxdeux"));
-    test_assert(STR_EQUALS(tab2->tab[3]->mot, "un"));
+    WordArray_sort(tab2, SORT_LEXICO, true);
+    test_assert(STR_EQUALS(tab2->tab[0]->word, "deux"));
+    test_assert(STR_EQUALS(tab2->tab[1]->word, "deuxdeux"));
+    test_assert(STR_EQUALS(tab2->tab[3]->word, "un"));
 
-    TAB_libere(tab1);
-    TAB_libere(tab2);
-    ABR_libere(ens1);
-    ABR_libere(ens2);
+    WordArray_free(tab1);
+    WordArray_free(tab2);
+    Tree_free(ens1);
+    Tree_free(ens2);
 
     return 1;
 }
 
-static int test_ALG_compter_mots() {
-    Mots* ens1 = ABR_initialiser(), *ens2 = ABR_initialiser();
+static int test_ALG_count_words() {
+    WordTree* ens1 = Tree_new(), *ens2 = Tree_new();
     test_assert(ens1);
     
     FILE* f1 = fopen("textes/sujet_test_mot_suivant_x.txt", "r");
     FILE* f2 = fopen("textes/casse_doublons.txt", "r");
     test_assert(f1 && f2);
 
-    ALG_compter_mots(ens1, f1);
-    ALG_compter_mots(ens2, f2);
+    ALG_count_words(ens1, f1);
+    ALG_count_words(ens2, f2);
     fclose(f1);
     fclose(f2);
 
@@ -179,20 +178,20 @@ static int test_ALG_compter_mots() {
     test_assert(ABR_ASSERT_OCCURENCES(ens2, "salut", 3));
     test_assert(ABR_ASSERT_OCCURENCES(ens2, "voila", 1));
 
-    ABR_libere(ens1);
-    ABR_libere(ens2);
+    Tree_free(ens1);
+    Tree_free(ens2);
     return 1;
 }
 
 
-static int test_ALG_mots_apres_x() {
-    Mots* ens1 = ABR_initialiser();
+static int test_ALG_words_after_x() {
+    WordTree* ens1 = Tree_new();
     test_assert(ens1);
     
     FILE* f = fopen("textes/sujet_test_mot_suivant_x.txt", "r");
     test_assert(f);
 
-    ALG_mots_apres_x(ens1, f, "ab");
+    ALG_words_after_x(ens1, f, "ab");
     fclose(f);
 
     test_assert(ABR_ASSERT_OCCURENCES(ens1, "ab", 1));
@@ -200,21 +199,21 @@ static int test_ALG_mots_apres_x() {
     test_assert(ABR_ASSERT_OCCURENCES(ens1, "a", 2));
     test_assert(ABR_ASSERT_OCCURENCES(ens1, "b", 2));
     
-    test_assert(ABR_cherche_mot(ens1, "abc") == NULL);
+    test_assert(Tree_search_word(ens1, "abc") == NULL);
 
-    ABR_libere(ens1);
+    Tree_free(ens1);
     return 1;
 }
 
 
-static int test_ALG_mots_avant_x() {
-    Mots* ens1 = ABR_initialiser();
+static int test_ALG_words_before_x() {
+    WordTree* ens1 = Tree_new();
     test_assert(ens1);
     
     FILE* f = fopen("textes/sujet_test_mot_suivant_x.txt", "r");
     test_assert(f);
 
-    ALG_mots_avant_x(ens1, f, "ab");
+    ALG_words_before_x(ens1, f, "ab");
     fclose(f);
 
     test_assert(ABR_ASSERT_OCCURENCES(ens1, "a", 3));
@@ -222,14 +221,14 @@ static int test_ALG_mots_avant_x() {
     test_assert(ABR_ASSERT_OCCURENCES(ens1, "aaa", 2));
     test_assert(ABR_ASSERT_OCCURENCES(ens1, "b", 1));
     
-    test_assert(ABR_cherche_mot(ens1, "abc") == NULL);
+    test_assert(Tree_search_word(ens1, "abc") == NULL);
 
-    ABR_libere(ens1);
+    Tree_free(ens1);
     return 1;
 }
 
 static int test_ALG_expressions() {
-    Mots* ens1 = ABR_initialiser();
+    WordTree* ens1 = Tree_new();
     test_assert(ens1);
     
     FILE* f1 = fopen("textes/sujet_exprs.txt", "r");
@@ -247,20 +246,20 @@ static int test_ALG_expressions() {
     test_assert(ABR_ASSERT_OCCURENCES(ens1, "un trois", 1));
     test_assert(ABR_ASSERT_OCCURENCES(ens1, "trois deux", 1));
     
-    TabMots* tab1 = TAB_arbre_en_tab(ens1);
+    WordArray* tab1 = WordArray_from_WordTree(ens1);
     
-    // Vérification de l'ordre d'apparition
-    TAB_tri(tab1, TRI_APPARITION, true);
-    test_assert(STR_EQUALS(tab1->tab[0]->mot, "un un"));
-    test_assert(STR_EQUALS(tab1->tab[1]->mot, "un deux"));
-    test_assert(STR_EQUALS(tab1->tab[2]->mot, "deux trois"));
-    test_assert(STR_EQUALS(tab1->tab[3]->mot, "trois trois"));
-    test_assert(STR_EQUALS(tab1->tab[4]->mot, "trois un"));
-    test_assert(STR_EQUALS(tab1->tab[5]->mot, "un trois"));
-    test_assert(STR_EQUALS(tab1->tab[6]->mot, "trois deux"));
+    // Vérification de l'ordre d'id
+    WordArray_sort(tab1, SORT_APPARITION, true);
+    test_assert(STR_EQUALS(tab1->tab[0]->word, "un un"));
+    test_assert(STR_EQUALS(tab1->tab[1]->word, "un deux"));
+    test_assert(STR_EQUALS(tab1->tab[2]->word, "deux trois"));
+    test_assert(STR_EQUALS(tab1->tab[3]->word, "trois trois"));
+    test_assert(STR_EQUALS(tab1->tab[4]->word, "trois un"));
+    test_assert(STR_EQUALS(tab1->tab[5]->word, "un trois"));
+    test_assert(STR_EQUALS(tab1->tab[6]->word, "trois deux"));
 
     
-    Mots* ens2 = ABR_initialiser();
+    WordTree* ens2 = Tree_new();
     FILE* f2 = fopen("textes/brassens.txt", "r");
     test_assert(f2);
 
@@ -272,106 +271,106 @@ static int test_ALG_expressions() {
     test_assert(ABR_ASSERT_OCCURENCES(ens2, "heureux j aurais", 1));
     test_assert(ABR_ASSERT_OCCURENCES(ens2, "eloigner de mon", 1));
 
-    TabMots* tab2 = TAB_arbre_en_tab(ens2);
+    WordArray* tab2 = WordArray_from_WordTree(ens2);
 
-    // Vérification de l'ordre d'apparition
-    TAB_tri(tab2, TRI_APPARITION, true);
-    test_assert(STR_EQUALS(tab2->tab[0]->mot, "aupres de mon"));
-    test_assert(STR_EQUALS(tab2->tab[1]->mot, "de mon arbre"));
-    test_assert(STR_EQUALS(tab2->tab[12]->mot, "eloigner de mon"));
+    // Vérification de l'ordre d'id
+    WordArray_sort(tab2, SORT_APPARITION, true);
+    test_assert(STR_EQUALS(tab2->tab[0]->word, "aupres de mon"));
+    test_assert(STR_EQUALS(tab2->tab[1]->word, "de mon arbre"));
+    test_assert(STR_EQUALS(tab2->tab[12]->word, "eloigner de mon"));
 
-    ABR_libere(ens1);
-    ABR_libere(ens2);
-    TAB_libere(tab1);
-    TAB_libere(tab2);
+    Tree_free(ens1);
+    Tree_free(ens2);
+    WordArray_free(tab1);
+    WordArray_free(tab2);
 
     return 1;
 }
 
-static int test_ABR_initialiser() {
-    Mots* ens = ABR_initialiser();
+static int test_Tree_new() {
+    WordTree* ens = Tree_new();
     test_assert(ens);
     
-    test_assert(ens->racine == NULL);
+    test_assert(ens->root == NULL);
     test_assert(ens->len == 0);
     test_assert(ens->max_str_len == 0);
 
-    ABR_libere(ens);
+    Tree_free(ens);
 
     return 1;
 }
 
-static int test_ABR_alloue_noeud() {
+static int test_Tree_new_node() {
     char* mot = "there is no node";
-    MotEntry* entry = ABR_alloue_noeud(mot, 89);
+    WordNode* entry = Tree_new_node(mot, 89);
     test_assert(entry);
     
-    test_assert(STR_EQUALS(entry->mot, mot));
-    test_assert(entry->mot != mot); // Le mot est copié
+    test_assert(STR_EQUALS(entry->word, mot));
+    test_assert(entry->word != mot); // Le mot est copié
     
     test_assert(entry->fg == NULL);
     test_assert(entry->fd == NULL);
-    test_assert(entry->apparition == 89);
+    test_assert(entry->id == 89);
     test_assert(entry->nb_occ == 1);
 
-    ABR_libere_helper(&entry);
+    Tree_free_helper(&entry);
 
     return 1;
 }
 
-static int test_ABR_cherche_mot() {
-    Mots* ens = ABR_initialiser();
-    MotEntry* entry;
+static int test_Tree_search_word() {
+    WordTree* ens = Tree_new();
+    WordNode* entry;
     test_assert(ens);
     
     // Recherche dans un arbre vide
-    entry = ABR_cherche_mot(ens, t1[0]);
+    entry = Tree_search_word(ens, t1[0]);
     test_assert(entry == NULL);
 
     // Recherche dans un arbre non vide
-    ABR_ajouter_mot(ens, t1[0]);
-    ABR_ajouter_mot(ens, t1[0]);
-    ABR_ajouter_mot(ens, t1[1]);
+    Tree_add_word(ens, t1[0]);
+    Tree_add_word(ens, t1[0]);
+    Tree_add_word(ens, t1[1]);
 
-    entry = ABR_cherche_mot(ens, t1[0]);
+    entry = Tree_search_word(ens, t1[0]);
     test_assert(entry != NULL);
-    test_assert(STR_EQUALS(entry->mot, t1[0]));
+    test_assert(STR_EQUALS(entry->word, t1[0]));
 
     // Recherche d'un mot NULL
-    entry = ABR_cherche_mot(ens, NULL);
+    entry = Tree_search_word(ens, NULL);
     test_assert(entry == NULL);
 
-    ABR_libere(ens);
+    Tree_free(ens);
 
     return 1;
 }
 
-static int test_ABR_appartient() {
-    Mots* ens = ABR_initialiser();
+static int test_Tree_in() {
+    WordTree* ens = Tree_new();
     test_assert(ens);
 
     // Recherche dans un arbre vide
-    test_assert(ABR_appartient(ens, t1[0]) == false);
+    test_assert(Tree_in(ens, t1[0]) == false);
 
     // Recherche dans un arbre non vide
-    ABR_ajouter_mot(ens, t1[0]);
-    ABR_ajouter_mot(ens, t1[0]);
-    ABR_ajouter_mot(ens, t1[1]);
+    Tree_add_word(ens, t1[0]);
+    Tree_add_word(ens, t1[0]);
+    Tree_add_word(ens, t1[1]);
 
-    test_assert(ABR_appartient(ens, t1[0]) == true);
+    test_assert(Tree_in(ens, t1[0]) == true);
 
     // Recherche d'un mot inexistant
-    test_assert(ABR_appartient(ens, "Bye!") == false);
+    test_assert(Tree_in(ens, "Bye!") == false);
 
     // Recherche d'un mot NULL
-    test_assert(ABR_appartient(ens, NULL) == false);
+    test_assert(Tree_in(ens, NULL) == false);
 
-    ABR_libere(ens);
+    Tree_free(ens);
     return 1;
 }
 
 static int test_ABR_ajouter_mot() {
-    Mots* ens = ABR_initialiser();
+    WordTree* ens = Tree_new();
     test_assert(ens);
 
     STRING_ARRAY_TO_ENS(t1, ens);
@@ -385,8 +384,8 @@ static int test_ABR_ajouter_mot() {
     test_assert(ens->len == 5);
 
     // Ajout d'un mot NULL
-    test_assert(ABR_ajouter_mot(ens, NULL) == -1);
+    test_assert(Tree_add_word(ens, NULL) == -1);
 
-    ABR_libere(ens);
+    Tree_free(ens);
     return 1;
 }

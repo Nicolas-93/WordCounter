@@ -1,14 +1,14 @@
 #define _GNU_SOURCE
 
 #include "algo.h"
-#include "ABR.h"
+#include "tree.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <assert.h>
 
 
-int ALG_mots_apres_x(Mots* dest, FILE* f, char* x) {
+int ALG_words_after_x(WordTree* dest, FILE* f, char* x) {
     assert(f);
 
     char* line = NULL;
@@ -16,21 +16,21 @@ int ALG_mots_apres_x(Mots* dest, FILE* f, char* x) {
     ssize_t len_line;
     char* token;
 
-    bool trouve_avant = false;
+    bool found_before = false;
 
     // On bufferise les lignes avec getline qui alloue également l'espace nécessaire
     while ((len_line = getline(&line, &len_buf, f)) != EOF) {
         FOREACH_TOKEN(token, line) {
-            if (!MOT_est_correct(token)) continue;
+            if (!Word_is_correct(token)) continue;
             
             if (strcmp(token, x) == 0) {
-                if (trouve_avant)
-                    ABR_ajouter_mot(dest, token);
-                trouve_avant = true;
+                if (found_before)
+                    Tree_add_word(dest, token);
+                found_before = true;
             }
-            else if (trouve_avant) {
-                ABR_ajouter_mot(dest, token);
-                trouve_avant = false;
+            else if (found_before) {
+                Tree_add_word(dest, token);
+                found_before = false;
             }
         }
     }
@@ -39,7 +39,7 @@ int ALG_mots_apres_x(Mots* dest, FILE* f, char* x) {
     return 1;
 }
 
-int ALG_mots_avant_x(Mots* dest, FILE* f, char* x) {
+int ALG_words_before_x(WordTree* dest, FILE* f, char* x) {
     assert(f);
 
     char* line = NULL;
@@ -47,28 +47,28 @@ int ALG_mots_avant_x(Mots* dest, FILE* f, char* x) {
     ssize_t len_line;
     char* token;
 
-    char* mot_prec = NULL;
-    size_t bufsize_mot_prec = 0;
+    char* prec_word = NULL;
+    size_t bufsize_prec_word = 0;
 
     // On bufferise les lignes avec getline qui alloue également l'espace nécessaire
     while ((len_line = getline(&line, &len_buf, f)) != EOF) {
         FOREACH_TOKEN(token, line) {
-            if (!MOT_est_correct(token)) continue;
+            if (!Word_is_correct(token)) continue;
             
-            if (mot_prec && strcmp(token, x) == 0) {
-                ABR_ajouter_mot(dest, mot_prec);
+            if (prec_word && strcmp(token, x) == 0) {
+                Tree_add_word(dest, prec_word);
             }
 
-            MOT_remplace_mot(&mot_prec, &bufsize_mot_prec, token);
+            Word_replace(&prec_word, &bufsize_prec_word, token);
         }
     }
 
-    free(mot_prec);
+    free(prec_word);
     free(line);
     return 1;
 }
 
-int ALG_compter_mots(Mots* dest, FILE* f) {
+int ALG_count_words(WordTree* dest, FILE* f) {
     char* line = NULL;
     size_t len_buf = 0;
     ssize_t len_line;
@@ -76,8 +76,8 @@ int ALG_compter_mots(Mots* dest, FILE* f) {
 
     while ((len_line = getline(&line, &len_buf, f)) != EOF) {
         FOREACH_TOKEN(token, line) {
-            if (!MOT_est_correct(token)) continue;
-            ABR_ajouter_mot(dest, token);
+            if (!Word_is_correct(token)) continue;
+            Tree_add_word(dest, token);
         }
     }
     free(line);
@@ -85,14 +85,14 @@ int ALG_compter_mots(Mots* dest, FILE* f) {
     return 1;
 }
 
-int ALG_expressions(Mots* dest, FILE* f, int n) {
-    char* ligne = NULL;
+int ALG_expressions(WordTree* dest, FILE* f, int n) {
+    char* line = NULL;
     char expr[n * MAX_WORD_SIZE];
 
     int len_token;
     char* token;
-    char* chaine_token;
-    char* chaine_saveptr;
+    char* str_token;
+    char* str_saveptr;
 
     size_t len_buf = 0;
     ssize_t len_ligne;
@@ -101,18 +101,18 @@ int ALG_expressions(Mots* dest, FILE* f, int n) {
 
     int i = 0;
 
-    while ((len_ligne = getline(&ligne, &len_buf, f)) != EOF) {
-        FOREACH_TOKEN_SAFE(chaine_token, ligne, &chaine_saveptr) {
-            if (!MOT_est_correct(chaine_token)) continue;
-            strcat(expr, chaine_token);
+    while ((len_ligne = getline(&line, &len_buf, f)) != EOF) {
+        FOREACH_TOKEN_SAFE(str_token, line, &str_saveptr) {
+            if (!Word_is_correct(str_token)) continue;
+            strcat(expr, str_token);
 
-            // On doit initaliser le tableau d'une première expression à n mots
+            // We must initialize the array with a first expression of n words
             if (i++ < n - 1) {
                 strcat(expr, " ");
                 continue;
             }
 
-            ABR_ajouter_mot(dest, expr);
+            Tree_add_word(dest, expr);
             strcat(expr, " ");
 
             token = strtok(expr, " ");
@@ -125,6 +125,6 @@ int ALG_expressions(Mots* dest, FILE* f, int n) {
         }
     }
 
-    free(ligne);
+    free(line);
     return 1;
 }

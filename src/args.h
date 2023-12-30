@@ -3,31 +3,31 @@
 
 #include <stdbool.h>
 #include <stdio.h>
-#include "tableau.h"
+#include "wordarray.h"
 #include "algo.h"
 
-typedef struct Parameters {
+typedef struct Args {
     char* filename;
     FILE* file;
 
     struct {
-        ModeTri mode;
-        bool croissant;
+        SortMode mode;
+        bool ascending;
     } tri;
 
-    ModeRecherche mode;
+    SearchMode mode;
     union {
-        char* mot;
+        char* word;
         int len_expr;
-    } recherche;
+    } search;
 
-    bool test_unitaire;
+    bool unittest;
 
-} Parameters;
+} Args;
 
-Parameters ARGS_parse(int argc, char* argv[]);
+Args ARGS_parse(int argc, char* argv[]);
 void ARGS_print_help(char* progname);
-TabMots* ARGS_execute_tri(const Mots* mots, Parameters params);
-Mots* ARGS_execute_lecture(Parameters params);
+WordArray* ARGS_sort(const WordTree* mots, Args params);
+WordTree* ARGS_readfile(Args params);
 
 #endif

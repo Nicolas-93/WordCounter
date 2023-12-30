@@ -1,8 +1,8 @@
 #ifndef ALGO_INCLUDED
 #define ALGO_INCLUDED
 
-#include "ABR.h"
-#include "mot.h"
+#include "tree.h"
+#include "wordtree.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -10,62 +10,60 @@
 #define MAX_WORD_SIZE 1024
 
 #define FOREACH_TOKEN(token, line) \
-    for (token = strtok(line, SEPARATORS), MOT_normaliser(token); \
+    for (token = strtok(line, SEPARATORS), Word_to_lower(token); \
          token;                                                   \
-         token = strtok(NULL, SEPARATORS), MOT_normaliser(token))
+         token = strtok(NULL, SEPARATORS), Word_to_lower(token))
 
 #define FOREACH_TOKEN_SAFE(token, line, saveptr) \
-    for (token = strtok_r(line, SEPARATORS, (saveptr)), MOT_normaliser(token); \
+    for (token = strtok_r(line, SEPARATORS, (saveptr)), Word_to_lower(token); \
          token;                                                                   \
-         token = strtok_r(NULL, SEPARATORS, (saveptr)), MOT_normaliser(token))
+         token = strtok_r(NULL, SEPARATORS, (saveptr)), Word_to_lower(token))
 
-typedef enum ModeRecherche {
-    MODE_COMPTER_MOTS = 0,
-    MODE_MOTS_AVANT_X = 1,
-    MODE_MOTS_APRES_X = 2,
+typedef enum SearchMode {
+    MODE_COUNT_WORDS = 0,
+    MODE_WORDS_BEFORE_X = 1,
+    MODE_WORDS_AFTER_X = 2,
     MODE_EXPRESSION = 4,
-} ModeRecherche;
+} SearchMode;
 
 /**
- * @brief Crée un tableau contenant les mots qui suivent
- * le mot x, depuis le fichier f.
- * (Option s)
+ * @brief Create an array containing the words that follow
+ * the word x, from the file f.
  * 
- * @param dest Adresse du tableau de destination
- * @param f 
+ * @param dest Destination array
+ * @param f File to read from
  * @return int 
  */
-int ALG_mots_apres_x(Mots* dest, FILE* f, char* x);
+int ALG_words_after_x(WordTree* dest, FILE* f, char* x);
 
 
 /**
- * @brief Crée un tableau contenant les mots qui précèdent
- * le mot x, depuis le fichier f.
- * (Option s)
+ * @brief Create an array containing the words that precede
+ * the word x, from the file f.
  * 
- * @param dest Adresse du tableau de destination
- * @param f 
+ * @param dest Destination array
+ * @param f File to read from
  * @return int 
  */
-int ALG_mots_avant_x(Mots* dest, FILE* f, char* x);
+int ALG_words_before_x(WordTree* dest, FILE* f, char* x);
 
 /**
- * @brief Compte le nombre d'occurences de tous les mots.
+ * @brief Count the number of occurences of all words.
  * 
- * @param dest 
- * @param f 
+ * @param dest Destination array
+ * @param f File to read from
  * @return int 
  */
-int ALG_compter_mots(Mots* dest, FILE* f);
+int ALG_count_words(WordTree* dest, FILE* f);
 
 /**
- * @brief Compte les expressions de n mots.
+ * @brief Compte expressions of n words.
  * 
- * @param dest 
- * @param f 
- * @param n 
+ * @param dest Destination array
+ * @param f File to read from
+ * @param n Number of words in the expression
  * @return int 
  */
-int ALG_expressions(Mots* dest, FILE* f, int n);
+int ALG_expressions(WordTree* dest, FILE* f, int n);
 
 #endif

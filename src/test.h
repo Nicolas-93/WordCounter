@@ -2,10 +2,10 @@
 #define TEST_INCLUDED
 
 #include "algo.h"
-#include "mot.h"
-#include "tableau.h"
-#include "affichage.h"
-#include "ABR.h"
+#include "wordtree.h"
+#include "wordarray.h"
+#include "output.h"
+#include "tree.h"
 #include <stdio.h>
 
 #define COLOR_RED "\x1b[31m"
@@ -35,24 +35,24 @@
 #define STRING_ARRAY_TO_ENS(array, ens) \
     do { \
         for (int i = 0; i < SIZEOF_ARRAY(array); i++) { \
-            ABR_ajouter_mot(ens, array[i]); \
+            Tree_add_word(ens, array[i]); \
         } \
     } while (0)
 
 #define ABR_ASSERT_OCCURENCES(ens, mot, nb) \
-    (ABR_cherche_mot(ens, mot)->nb_occ == (nb))
+    (Tree_search_word(ens, mot)->nb_occ == (nb))
 
 typedef int (*TestFunc)(void);
 
 /**
- * @brief Lance tous les tests unitaires.
+ * @brief LRun unit tests.
  * 
  * @return int 
  */
-int test();
+int test(void);
 
 /**
- * @brief Affiche le résultat d'une assertion.
+ * @brief Print the result of an assertion.
  * 
  */
 void test_assert_print(const char* file, int line, const char* func, const char* expr, int res) ;
